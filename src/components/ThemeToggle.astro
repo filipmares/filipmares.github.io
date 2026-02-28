@@ -1,0 +1,98 @@
+---
+/**
+ * ThemeToggle.astro
+ * Dark mode toggle button with mechanical click audio synthesis.
+ * Supports three-state theming: explicit dark, explicit light, OS preference fallback.
+ */
+---
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode" transition:persist>
+    <!-- Moon icon (shows in light mode) -->
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <!-- Sun icon (shows in dark mode) -->
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+</button>
+
+<script>
+    // Audio synthesis for mechanical click
+    let audioCtx: AudioContext | null = null;
+
+    function getAudioContext(): AudioContext {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        return audioCtx;
+    }
+
+    function playMechanicalClick() {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') {
+            ctx.resume();
+        }
+
+        // First click (higher pitch, sharp)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'square';
+        osc1.frequency.setValueAtTime(150, ctx.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.02);
+        gain1.gain.setValueAtTime(0, ctx.currentTime);
+        gain1.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.005);
+        gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.03);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(ctx.currentTime);
+        osc1.stop(ctx.currentTime + 0.03);
+
+        // Second click (lower pitch, thud)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(80, ctx.currentTime + 0.03);
+        osc2.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 0.08);
+        gain2.gain.setValueAtTime(0, ctx.currentTime + 0.03);
+        gain2.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.035);
+        gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(ctx.currentTime + 0.03);
+        osc2.stop(ctx.currentTime + 0.08);
+    }
+
+    // Expose globally so BlueprintMode can reuse it
+    (window as any).playMechanicalClick = playMechanicalClick;
+
+    // Theme toggle logic
+    const toggleBtn = document.getElementById('theme-toggle')!;
+    const root = document.documentElement;
+    const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    toggleBtn.addEventListener('click', () => {
+        playMechanicalClick();
+
+        const isCurrentlyDark = root.classList.contains('dark-theme') ||
+            (!root.classList.contains('light-theme') && osPrefersDark);
+
+        if (isCurrentlyDark) {
+            root.classList.remove('dark-theme');
+            root.classList.add('light-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            root.classList.remove('light-theme');
+            root.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+</script>

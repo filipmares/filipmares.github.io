@@ -1,0 +1,71 @@
+---
+/**
+ * SEO.astro
+ * Consolidated SEO meta tags component.
+ * Renders: canonical, description, robots, Open Graph, Twitter Card, JSON-LD.
+ */
+interface Props {
+    title: string;
+    description: string;
+    canonical?: string;
+    ogType?: string;
+    ogImage?: string;
+    noindex?: boolean;
+    jsonLd?: Record<string, unknown>;
+}
+
+const {
+    title,
+    description,
+    canonical = Astro.url.href,
+    ogType = 'website',
+    ogImage = 'https://filipmares.com/og/index.png',
+    noindex = false,
+    jsonLd,
+} = Astro.props;
+
+// Normalize canonical — remove trailing slash except for root
+const normalizedCanonical = canonical.endsWith('/') && canonical !== Astro.site?.href
+    ? canonical.slice(0, -1)
+    : canonical;
+
+// Default JSON-LD: Person schema for the site owner
+const defaultJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Filip Mares',
+    url: 'https://filipmares.com',
+    jobTitle: 'Principal Software Engineer',
+    worksFor: {
+        '@type': 'Organization',
+        name: 'Microsoft',
+    },
+    sameAs: [
+        'https://www.linkedin.com/in/filipmares/',
+    ],
+};
+
+const structuredData = jsonLd || defaultJsonLd;
+---
+
+<!-- Primary Meta -->
+<meta name="description" content={description}>
+<link rel="canonical" href={normalizedCanonical}>
+{noindex && <meta name="robots" content="noindex, nofollow">}
+
+<!-- Open Graph -->
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:type" content={ogType}>
+<meta property="og:url" content={normalizedCanonical}>
+<meta property="og:image" content={ogImage}>
+<meta property="og:site_name" content="Filip Mares">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={ogImage}>
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

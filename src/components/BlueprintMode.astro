@@ -1,0 +1,44 @@
+---
+/**
+ * BlueprintMode.astro
+ * Easter egg: type "grid" anywhere to toggle a CSS grid overlay
+ * with orange outlines on all elements. Shows a toast notification.
+ */
+---
+
+<div id="blueprint-toast" transition:persist>Developer Mode Enabled</div>
+
+<script>
+    const secretCode = 'grid';
+    let inputBuffer = '';
+
+    document.addEventListener('keydown', (e) => {
+        // Only listen to a-z keys to build the buffer
+        if (e.key.match(/^[a-z]$/i)) {
+            inputBuffer += e.key.toLowerCase();
+
+            // Keep buffer at maximum length of secret word
+            if (inputBuffer.length > secretCode.length) {
+                inputBuffer = inputBuffer.slice(-secretCode.length);
+            }
+
+            if (inputBuffer === secretCode) {
+                document.body.classList.toggle('blueprint-mode');
+
+                const toast = document.getElementById('blueprint-toast');
+                if (document.body.classList.contains('blueprint-mode')) {
+                    // Reuse the mechanical click from ThemeToggle
+                    if (typeof (window as any).playMechanicalClick === 'function') {
+                        (window as any).playMechanicalClick();
+                    }
+                    toast?.classList.add('show');
+                    setTimeout(() => toast?.classList.remove('show'), 3000);
+                } else {
+                    toast?.classList.remove('show');
+                }
+
+                inputBuffer = ''; // Reset buffer
+            }
+        }
+    });
+</script>

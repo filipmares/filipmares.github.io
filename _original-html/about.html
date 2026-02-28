@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Filip Mares</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23f45b26'/></svg>">
+    
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="About - Filip Mares">
+    <meta property="og:description" content="Principal Software Engineer at Microsoft. Previously founding engineer at Talko and Web Engineering Lead at Pulse.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://filipmares.com/about">
+    <meta property="og:image" content="https://filipmares.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <script>
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        } else if (storedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #f2f2ef;
+            --text-main: #111111;
+            --text-muted: #666666;
+            --accent-orange: #f45b26;
+            --border-color: #d8d8d6;
+            --photo-placeholder: #d8d8d6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #111111;
+                --text-main: #f2f2ef;
+                --text-muted: #888888;
+                --accent-orange: #f45b26;
+                --border-color: rgba(255, 255, 255, 0.1);
+                --photo-placeholder: #222222;
+            }
+        }
+
+        /* View Transitions */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        ::view-transition-old(root) {
+            animation: fade-out 0.15s cubic-bezier(0.4, 0, 1, 1) both;
+        }
+
+        ::view-transition-new(root) {
+            animation: fade-in 0.3s cubic-bezier(0, 0, 0.2, 1) 0.15s both;
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .navbar {
+            padding: 2rem 2rem 0 2rem;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Dark Mode Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-orange);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* SVG switching logic based on current theme state */
+        :root:not(.dark-theme) .icon-sun,
+        :root.dark-theme .icon-moon {
+            display: none;
+        }
+        :root.dark-theme .icon-sun,
+        :root:not(.dark-theme) .icon-moon {
+            display: block;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) .icon-sun { display: block; }
+            :root:not(.light-theme) .icon-moon { display: none; }
+            
+            :root.light-theme .icon-sun { display: none; }
+            :root.light-theme .icon-moon { display: block; }
+        }
+
+        /* Dark Mode variables applied via class (for toggle) */
+        :root.dark-theme {
+            --bg-color: #111111;
+            --text-main: #f2f2ef;
+            --text-muted: #888888;
+            --accent-orange: #f45b26;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --photo-placeholder: #222222;
+        }
+        :root.dark-theme .profile-photo {
+            mix-blend-mode: normal;
+            opacity: 0.85;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) {
+                --bg-color: #111111;
+                --text-main: #f2f2ef;
+                --text-muted: #888888;
+                --accent-orange: #f45b26;
+                --border-color: rgba(255, 255, 255, 0.1);
+                --photo-placeholder: #222222;
+            }
+            :root:not(.light-theme) .profile-photo {
+                mix-blend-mode: normal;
+                opacity: 0.85;
+            }
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: transparent;
+            padding: 0.5rem 0;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-orange);
+        }
+
+        .back-link svg {
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-link:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            margin-bottom: 3rem;
+            display: inline-flex;
+            align-items: center;
+            view-transition-name: about-link;
+        }
+
+        /* Editorial Split Layout */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* Photo Integration */
+        .photo-wrapper {
+            position: relative;
+        }
+
+        .photo-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: -1rem;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            z-index: 0;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: 4px;
+            position: relative;
+            z-index: 1;
+            /* Braun Editorial effect: stark grayscale, multiplied into the background */
+            filter: grayscale(100%) contrast(1.1) brightness(0.95);
+            mix-blend-mode: multiply;
+            background-color: var(--photo-placeholder); /* Fallback placeholder color */
+            display: block;
+        }
+
+        /* Instructions for user */
+        .photo-placeholder-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .bio-content {
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .bio-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .bio-meta {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .meta-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 800px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .photo-wrapper {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .bio-meta {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* ---------------------------------
+           Blueprint Mode / Easter Egg
+           --------------------------------- */
+        body.blueprint-mode {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(244, 91, 38, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(244, 91, 38, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        :root.dark-theme body.blueprint-mode,
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) body.blueprint-mode {
+                background-image: 
+                    linear-gradient(rgba(244, 91, 38, 0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(244, 91, 38, 0.2) 1px, transparent 1px);
+            }
+        }
+
+        body.blueprint-mode * {
+            outline: 1px solid rgba(244, 91, 38, 0.4) !important;
+        }
+
+        #blueprint-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--text-main);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        #blueprint-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="blueprint-toast">Developer Mode Enabled</div>
+    <nav class="navbar">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Index
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+            <!-- Moon icon (shows in light mode) -->
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <!-- Sun icon (shows in dark mode) -->
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </button>
+    </nav>
+
+    <div class="container">
+        <h1>About</h1>
+
+        <div class="about-grid">
+            <div class="photo-wrapper">
+                <!-- Replace 'profile.jpg' with your actual photo file path -->
+                <img src="profile.jpg" alt="Filip Mares" class="profile-photo" onerror="this.style.opacity='0'">
+                <div class="photo-placeholder-text">Replace with profile.jpg<br>(3:4 aspect ratio recommended)</div>
+            </div>
+
+            <div class="bio-content">
+                <p>I am a Principal Software Engineer at Microsoft, currently based in the San Francisco Bay Area. My work is heavily focused on the intersection of human-computer interaction, artificial intelligence, and low-code platforms.</p>
+                
+                <p>Most recently, I've been building App Builder within Microsoft 365 Copilot, focusing on giving users an intuitive, agentic experience to create secure and sharable productivity apps at an enterprise scale.</p>
+
+                <p>Prior to this, I led the development of Power Apps App Copilot and multiplayer collaboration capabilities. I also guided the front-end team for Lobe—a project incubated in the Office of the CTO aimed at democratizing machine learning through an accessible visual interface.</p>
+
+                <p>Before my tenure at Microsoft, I was a founding engineer at Talko (acquired by Microsoft) and the Web Engineering Lead at Pulse (acquired by LinkedIn).</p>
+
+                <div class="bio-meta">
+                    <div class="meta-block">
+                        <span class="meta-label">Location</span>
+                        <span class="meta-value">San Francisco Bay Area, CA</span>
+                    </div>
+                    <div class="meta-block">
+                        <span class="meta-label">Expertise</span>
+                        <span class="meta-value">React, TypeScript, LLMs, System Architecture</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+
+        // Audio synthesis for mechanical click
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playMechanicalClick() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'square';
+            osc1.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc1.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.02);
+            gain1.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain1.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.005);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(audioCtx.currentTime);
+            osc1.stop(audioCtx.currentTime + 0.03);
+
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(80, audioCtx.currentTime + 0.03);
+            osc2.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.08);
+            gain2.gain.setValueAtTime(0, audioCtx.currentTime + 0.03);
+            gain2.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.035);
+            gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(audioCtx.currentTime + 0.03);
+            osc2.stop(audioCtx.currentTime + 0.08);
+        }
+
+        const currentTheme = localStorage.getItem('theme');
+        const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (currentTheme === 'dark') {
+            root.classList.add('dark-theme');
+        } else if (currentTheme === 'light') {
+            root.classList.add('light-theme');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            playMechanicalClick();
+            
+            const isCurrentlyDark = root.classList.contains('dark-theme') || 
+                                   (!root.classList.contains('light-theme') && osPrefersDark);
+
+            if (isCurrentlyDark) {
+                root.classList.remove('dark-theme');
+                root.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                root.classList.remove('light-theme');
+                root.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Developer Easter Egg: Blueprint Mode
+        const secretCode = 'grid';
+        let inputBuffer = '';
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key.match(/^[a-z]$/i)) {
+                inputBuffer += e.key.toLowerCase();
+                if (inputBuffer.length > secretCode.length) {
+                    inputBuffer = inputBuffer.slice(-secretCode.length);
+                }
+                if (inputBuffer === secretCode) {
+                    document.body.classList.toggle('blueprint-mode');
+                    
+                    const toast = document.getElementById('blueprint-toast');
+                    if (document.body.classList.contains('blueprint-mode')) {
+                        playMechanicalClick();
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 3000);
+                    } else {
+                        toast.classList.remove('show');
+                    }
+                    inputBuffer = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

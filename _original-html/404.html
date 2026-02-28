@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Filip Mares</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23f45b26'/></svg>">
+
+    <script>
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        } else if (storedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #f2f2ef;
+            --text-main: #111111;
+            --text-muted: #888888;
+            --accent-orange: #f45b26;
+            --border-color: #d8d8d6;
+        }
+
+        /* Dark Mode variables applied via class (for toggle) */
+        :root.dark-theme {
+            --bg-color: #111111;
+            --text-main: #f2f2ef;
+            --text-muted: #777777;
+            --accent-orange: #f45b26;
+            --border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) {
+                --bg-color: #111111;
+                --text-main: #f2f2ef;
+                --text-muted: #777777;
+                --accent-orange: #f45b26;
+                --border-color: rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        /* View Transitions */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root) {
+            animation: 0.15s ease-out both fade-out;
+        }
+        ::view-transition-new(root) {
+            animation: 0.3s ease-out 0.15s both fade-in;
+        }
+
+        @keyframes fade-out {
+            to { opacity: 0; }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar & Toggle */
+        .navbar {
+            padding: 2rem 2rem 0 2rem;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: transparent;
+            padding: 0.5rem 0;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-orange);
+        }
+
+        .back-link svg {
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-link:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-orange);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        :root:not(.dark-theme) .icon-sun,
+        :root.dark-theme .icon-moon {
+            display: none;
+        }
+        :root.dark-theme .icon-sun,
+        :root:not(.dark-theme) .icon-moon {
+            display: block;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) .icon-sun { display: block; }
+            :root:not(.light-theme) .icon-moon { display: none; }
+            
+            :root.light-theme .icon-sun { display: none; }
+            :root.light-theme .icon-moon { display: block; }
+        }
+
+        /* 404 Content */
+        .error-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .interactive-graphic {
+            width: 120px;
+            height: 180px;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .slot {
+            width: 60px;
+            height: 60px;
+            border: 4px dashed var(--border-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 30px;
+            transition: border-color 0.4s ease;
+        }
+
+        .fallen-piece {
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-orange);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .fallen-piece:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(244, 91, 38, 0.3);
+        }
+
+        /* The reconnected state triggers via JS */
+        .fallen-piece.reconnected {
+            bottom: 120px; /* Moves up to overlap the top slot exactly */
+            left: 30px;
+            transform: scale(1);
+            box-shadow: none;
+            cursor: default;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hint {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            opacity: 0.7;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ---------------------------------
+           Blueprint Mode / Easter Egg
+           --------------------------------- */
+        body.blueprint-mode {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(244, 91, 38, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(244, 91, 38, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        :root.dark-theme body.blueprint-mode,
+        @media (prefers-color-scheme: dark) {
+            :root:not(.light-theme) body.blueprint-mode {
+                background-image: 
+                    linear-gradient(rgba(244, 91, 38, 0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(244, 91, 38, 0.2) 1px, transparent 1px);
+            }
+        }
+
+        body.blueprint-mode * {
+            outline: 1px solid rgba(244, 91, 38, 0.4) !important;
+        }
+
+        #blueprint-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--text-main);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        #blueprint-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="blueprint-toast">Developer Mode Enabled</div>
+    <nav class="navbar">
+        <a href="index.html" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Index
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </button>
+    </nav>
+
+    <div class="error-container">
+        <!-- Interactive Playful Graphic -->
+        <div class="interactive-graphic">
+            <div class="slot" id="target-slot"></div>
+            <div class="fallen-piece" id="draggable-piece" title="Click to reconnect" aria-label="Disconnected component"></div>
+        </div>
+
+        <h1>404</h1>
+        <p>Component disconnected.</p>
+        <div class="hint">Click the orange piece to repair</div>
+    </div>
+
+    <script>
+        // Audio synthesis for mechanical click
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playMechanicalClick() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'square';
+            osc1.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc1.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.02);
+            gain1.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain1.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.005);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start(audioCtx.currentTime);
+            osc1.stop(audioCtx.currentTime + 0.03);
+
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(80, audioCtx.currentTime + 0.03);
+            osc2.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.08);
+            gain2.gain.setValueAtTime(0, audioCtx.currentTime + 0.03);
+            gain2.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.035);
+            gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(audioCtx.currentTime + 0.03);
+            osc2.stop(audioCtx.currentTime + 0.08);
+        }
+
+        // Easter Egg: Component Reconnection Logic
+        const piece = document.getElementById('draggable-piece');
+        const hint = document.querySelector('.hint');
+        const errorText = document.querySelector('p');
+
+        piece.addEventListener('click', () => {
+            if (piece.classList.contains('reconnected')) return; // Prevent double clicking
+            
+            playMechanicalClick();
+            
+            // Reconnect animation
+            piece.classList.add('reconnected');
+            
+            // Update UI text to show successful repair
+            errorText.textContent = "Component repaired. Rerouting...";
+            errorText.style.color = "var(--text-main)";
+            hint.style.opacity = "0";
+
+            // Redirect automatically after the snap animation finishes
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 800);
+        });
+
+        // Dark Mode Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+
+        const currentTheme = localStorage.getItem('theme');
+        const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (currentTheme === 'dark') {
+            root.classList.add('dark-theme');
+        } else if (currentTheme === 'light') {
+            root.classList.add('light-theme');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            playMechanicalClick();
+            
+            const isCurrentlyDark = root.classList.contains('dark-theme') || 
+                                   (!root.classList.contains('light-theme') && osPrefersDark);
+
+            if (isCurrentlyDark) {
+                root.classList.remove('dark-theme');
+                root.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                root.classList.remove('light-theme');
+                root.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Developer Easter Egg: Blueprint Mode
+        const secretCode = 'grid';
+        let inputBuffer = '';
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key.match(/^[a-z]$/i)) {
+                inputBuffer += e.key.toLowerCase();
+                if (inputBuffer.length > secretCode.length) {
+                    inputBuffer = inputBuffer.slice(-secretCode.length);
+                }
+                if (inputBuffer === secretCode) {
+                    document.body.classList.toggle('blueprint-mode');
+                    
+                    const toast = document.getElementById('blueprint-toast');
+                    if (document.body.classList.contains('blueprint-mode')) {
+                        playMechanicalClick();
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 3000);
+                    } else {
+                        toast.classList.remove('show');
+                    }
+                    inputBuffer = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

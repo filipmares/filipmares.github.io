@@ -1,0 +1,80 @@
+---
+/**
+ * BaseLayout.astro
+ * Shared HTML shell for all pages.
+ * Includes: head meta, FOUC prevention, global CSS, theme toggle, blueprint mode.
+ * ClientRouter enables SPA-like view transitions across all pages.
+ */
+import { ClientRouter } from 'astro:transitions';
+import SEO from '../components/SEO.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import BlueprintMode from '../components/BlueprintMode.astro';
+import '../styles/global.css';
+
+interface Props {
+    title: string;
+    description?: string;
+    ogType?: string;
+    ogUrl?: string;
+    ogImage?: string;
+    noindex?: boolean;
+    jsonLd?: Record<string, unknown>;
+}
+
+const {
+    title,
+    description = 'Principal Software Engineer at Microsoft. Focused on human-computer interaction, artificial intelligence, and low-code platforms.',
+    ogType = 'website',
+    ogUrl = Astro.url.href,
+    ogImage = 'https://filipmares.com/og/index.png',
+    noindex = false,
+    jsonLd,
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+
+    <!-- Favicon: Tiny Orange Braun Dot -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23f45b26'/></svg>">
+
+    <!-- SEO: meta, OG, Twitter, JSON-LD -->
+    <SEO
+        title={title}
+        description={description}
+        ogType={ogType}
+        canonical={ogUrl}
+        ogImage={ogImage}
+        noindex={noindex}
+        jsonLd={jsonLd}
+    />
+
+    <!-- Astro View Transitions: SPA-like client-side routing -->
+    <ClientRouter />
+
+    <!-- FOUC prevention: apply stored theme immediately -->
+    <script is:inline>
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        } else if (storedTheme === 'light') {
+            document.documentElement.classList.add('light-theme');
+        }
+    </script>
+
+    <!-- Slot for page-specific head content (extra styles, etc.) -->
+    <slot name="head" />
+</head>
+<body>
+    <BlueprintMode />
+    <slot name="nav">
+        <!-- Default: no nav. Pages provide their own nav via this slot. -->
+    </slot>
+    <slot />
+    <slot name="scripts" />
+</body>
+</html>

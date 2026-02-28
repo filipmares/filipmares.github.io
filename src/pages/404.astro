@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+---
+
+<BaseLayout title="404 - Filip Mares" noindex={true}>
+    <nav class="navbar" aria-label="Page navigation" slot="nav">
+        <a href="/" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Index
+        </a>
+        <ThemeToggle />
+    </nav>
+
+    <main class="error-container">
+        <!-- Interactive Playful Graphic -->
+        <div class="interactive-graphic">
+            <div class="slot" id="target-slot"></div>
+            <button class="fallen-piece" id="draggable-piece" type="button" aria-label="Click to reconnect disconnected component"></button>
+        </div>
+
+        <h1>404</h1>
+        <p>Component disconnected.</p>
+        <div class="hint" aria-hidden="true">Click the orange piece to repair</div>
+    </main>
+</BaseLayout>
+
+<style>
+    :global(body) {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .error-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .interactive-graphic {
+        width: 120px;
+        height: 180px;
+        position: relative;
+        margin-bottom: 3rem;
+    }
+
+    .slot {
+        width: 60px;
+        height: 60px;
+        border: 4px dashed var(--border-color);
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 30px;
+        transition: border-color 0.4s ease;
+    }
+
+    .fallen-piece {
+        width: 60px;
+        height: 60px;
+        background-color: var(--accent-orange);
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        left: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fallen-piece:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(244, 91, 38, 0.3);
+    }
+
+    .fallen-piece.reconnected {
+        bottom: 120px;
+        left: 30px;
+        transform: scale(1);
+        box-shadow: none;
+        cursor: default;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+
+    p {
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+    }
+
+    .hint {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        opacity: 0.7;
+        margin-top: -1rem;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<script>
+    const piece = document.getElementById('draggable-piece');
+    const hint = document.querySelector('.hint') as HTMLElement;
+    const errorText = document.querySelector('.error-container p') as HTMLElement;
+
+    piece?.addEventListener('click', () => {
+        if (piece.classList.contains('reconnected')) return;
+
+        if (typeof (window as any).playMechanicalClick === 'function') {
+            (window as any).playMechanicalClick();
+        }
+
+        piece.classList.add('reconnected');
+
+        errorText.textContent = "Component repaired. Rerouting...";
+        errorText.style.color = "var(--text-main)";
+        hint.style.opacity = "0";
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 800);
+    });
+</script>

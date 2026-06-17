@@ -23,8 +23,8 @@ jobs:
 
       - name: Install, build, and upload
         uses: withastro/action@v3
-        # with:
-        #   node-version: 22  # Optional: specify Node.js version
+        with:
+          node-version: 22  # Astro 6 requires Node >=22.12 (action defaults to 20)
 
   deploy:
     needs: build

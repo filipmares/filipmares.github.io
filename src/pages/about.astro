@@ -24,8 +24,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 
         <div class="about-grid">
             <div class="photo-wrapper">
-                <img src="/profile.jpg" alt="Filip Mares" class="profile-photo" width="400" height="533" loading="eager" onerror="this.style.display='none'">
-                <div class="photo-placeholder-text">Replace with profile.jpg<br>(3:4 aspect ratio recommended)</div>
+                <img src="/profile.jpg" alt="Filip Mares" class="profile-photo" width="400" height="533" loading="eager">
             </div>
 
             <div class="bio-content">
@@ -126,18 +125,6 @@ import ThemeToggle from '../components/ThemeToggle.astro';
             mix-blend-mode: normal;
             opacity: 0.85;
         }
-    }
-
-    .photo-placeholder-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        text-align: center;
-        pointer-events: none;
     }
 
     .bio-content {

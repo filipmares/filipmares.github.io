@@ -2,6 +2,9 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ThemeToggle from '../../components/ThemeToggle.astro';
+import CaseStudyContent from '../../components/projects/CaseStudyContent.astro';
+import LegacyProjectCompatibility from '../../components/projects/LegacyProjectCompatibility.astro';
+import ProjectChronologyNav from '../../components/projects/ProjectChronologyNav.astro';
 
 export async function getStaticPaths() {
     const projects = await getCollection('projects');
@@ -12,9 +15,17 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await render(project);
-const { title, description, companyLabel, tags, heroClass, galleryCaptions } = project.data;
+const { title, description, companyLabel, tags, heroClass, galleryCaptions, caseStudy } = project.data;
+const hasStructuredCaseStudy = caseStudy !== undefined;
+const Content = hasStructuredCaseStudy ? null : (await render(project)).Content;
 const slug = project.id;
+const allProjects = await getCollection('projects');
+const sortedProjects = [...allProjects].sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+const currentProjectIndex = sortedProjects.findIndex((entry) => entry.id === slug);
+const newerProject = currentProjectIndex > 0 ? sortedProjects[currentProjectIndex - 1] : undefined;
+const olderProject = currentProjectIndex >= 0 && currentProjectIndex < sortedProjects.length - 1
+    ? sortedProjects[currentProjectIndex + 1]
+    : undefined;
 ---
 
 <BaseLayout
@@ -29,12 +40,12 @@ const slug = project.id;
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            Back
+            Index
         </a>
         <ThemeToggle />
     </nav>
 
-    <div class={`hero-banner ${heroClass}`}></div>
+    {!hasStructuredCaseStudy && heroClass && <div class={`hero-banner legacy-project-hero ${heroClass}`}></div>}
 
     <div class="project-container">
         <header class="project-header">
@@ -47,22 +58,15 @@ const slug = project.id;
             </div>
         </header>
 
-        <main class="content-body" id="main-content" tabindex="-1">
-            <Content />
+        {hasStructuredCaseStudy && caseStudy ? (
+            <CaseStudyContent caseStudy={caseStudy} />
+        ) : (
+            <LegacyProjectCompatibility galleryCaptions={galleryCaptions}>
+                {Content && <Content />}
+            </LegacyProjectCompatibility>
+        )}
 
-            {galleryCaptions.length > 0 && (
-                <div class="gallery">
-                    {galleryCaptions.map((caption) => (
-                        <div class="gallery-item">
-                            <div class="gallery-placeholder">
-                                <div class="ui-element"></div>
-                            </div>
-                            <div class="gallery-caption">{caption}</div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </main>
+        <ProjectChronologyNav newerProject={newerProject} olderProject={olderProject} />
     </div>
 </BaseLayout>
 

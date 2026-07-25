@@ -1,0 +1,126 @@
+---
+interface CaseStudyLink {
+    label: string;
+    url: string;
+}
+
+interface CaseStudyArtifact {
+    src: string;
+    alt: string;
+    caption: string;
+    width?: number;
+    height?: number;
+    aspectRatio?: string;
+    kind?: 'screenshot' | 'diagram' | 'document' | 'photo' | 'other';
+    layout?: 'standard' | 'featured';
+}
+
+interface CaseStudy {
+    context: string;
+    role: string;
+    collaborationScope?: string;
+    constraints?: string[];
+    decisions?: string[];
+    outcomes?: string[];
+    reflection?: string;
+    links?: CaseStudyLink[];
+    artifacts?: CaseStudyArtifact[];
+}
+
+interface Props {
+    caseStudy: CaseStudy;
+}
+
+const {
+    caseStudy,
+} = Astro.props;
+
+const constraints = caseStudy.constraints ?? [];
+const decisions = caseStudy.decisions ?? [];
+const outcomes = caseStudy.outcomes ?? [];
+const links = caseStudy.links ?? [];
+const artifacts = caseStudy.artifacts ?? [];
+---
+
+<main class="content-body case-study-content" id="main-content" tabindex="-1">
+    <section class="case-study-section">
+        <h2>Context</h2>
+        <p>{caseStudy.context}</p>
+    </section>
+
+    <section class="case-study-section case-study-role">
+        <h2>Role & Scope</h2>
+        <p>{caseStudy.role}</p>
+        {caseStudy.collaborationScope && <p>{caseStudy.collaborationScope}</p>}
+    </section>
+
+    {constraints.length > 0 && (
+        <section class="case-study-section">
+            <h2>Constraints</h2>
+            <ul>
+                {constraints.map((constraint) => <li>{constraint}</li>)}
+            </ul>
+        </section>
+    )}
+
+    {decisions.length > 0 && (
+        <section class="case-study-section">
+            <h2>Key Decisions & Contributions</h2>
+            <ul>
+                {decisions.map((decision) => <li>{decision}</li>)}
+            </ul>
+        </section>
+    )}
+
+    {outcomes.length > 0 && (
+        <section class="case-study-section">
+            <h2>Outcomes & Impact</h2>
+            <ul>
+                {outcomes.map((outcome) => <li>{outcome}</li>)}
+            </ul>
+        </section>
+    )}
+
+    {caseStudy.reflection && (
+        <section class="case-study-section">
+            <h2>Reflection</h2>
+            <p>{caseStudy.reflection}</p>
+        </section>
+    )}
+
+    {links.length > 0 && (
+        <section class="case-study-section">
+            <h2>Relevant Links</h2>
+            <ul class="case-study-links">
+                {links.map((link) => (
+                    <li>
+                        <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    )}
+
+    {artifacts.length > 0 && (
+        <section class="case-study-artifacts" aria-label="Project artifacts">
+            {artifacts.map((artifact) => (
+                <figure class:list={['case-study-artifact', artifact.layout === 'featured' && 'is-featured']}>
+                    <div class="case-study-artifact-frame">
+                        <img
+                            src={artifact.src}
+                            alt={artifact.alt}
+                            width={artifact.width}
+                            height={artifact.height}
+                            loading="lazy"
+                            decoding="async"
+                            style={artifact.aspectRatio ? `aspect-ratio: ${artifact.aspectRatio};` : undefined}
+                        />
+                    </div>
+                    <figcaption>
+                        {artifact.caption}
+                    </figcaption>
+                </figure>
+            ))}
+        </section>
+    )}
+</main>

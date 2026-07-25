@@ -1,0 +1,295 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-25T20:16:11Z",
+  "title": "Design System: Filip Mares Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "signal-orange": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "#f45b26",
+        "tonalRamp": ["#371309", "#65200d", "#952f12", "#c94018", "#f45b26", "#ff875f", "#ffb59d", "#ffe6dc"]
+      },
+      "instrument-white": {
+        "role": "neutral",
+        "displayName": "Instrument White",
+        "canonical": "#f2f2ef",
+        "tonalRamp": ["#252524", "#454543", "#666663", "#888884", "#aaaaa6", "#cacac6", "#e3e3df", "#f7f7f4"]
+      },
+      "instrument-black": {
+        "role": "neutral",
+        "displayName": "Instrument Black",
+        "canonical": "#111111",
+        "tonalRamp": ["#111111", "#292929", "#444444", "#616161", "#818181", "#a3a3a3", "#c8c8c8", "#eeeeee"]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#595959",
+        "tonalRamp": ["#1b1b1b", "#333333", "#4b4b4b", "#666666", "#828282", "#a0a0a0", "#c4c4c4", "#eeeeee"]
+      },
+      "divider-gray": {
+        "role": "neutral",
+        "displayName": "Divider Gray",
+        "canonical": "#d8d8d6",
+        "tonalRamp": ["#242424", "#444443", "#646463", "#858583", "#a6a6a4", "#c5c5c3", "#ddddda", "#f4f4f1"]
+      },
+      "canvas-gray": {
+        "role": "neutral",
+        "displayName": "Canvas Gray",
+        "canonical": "#e4e4e1",
+        "tonalRamp": ["#252524", "#464645", "#686866", "#898987", "#ababaa", "#cbcbc9", "#e4e4e1", "#f6f6f3"]
+      },
+      "gallery-gray": {
+        "role": "neutral",
+        "displayName": "Gallery Gray",
+        "canonical": "#eaeaea",
+        "tonalRamp": ["#252525", "#474747", "#696969", "#8b8b8b", "#adadad", "#cecece", "#e6e6e6", "#f7f7f7"]
+      },
+      "clean-white": {
+        "role": "neutral",
+        "displayName": "Clean White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#262626", "#494949", "#6c6c6c", "#909090", "#b4b4b4", "#d4d4d4", "#eeeeee", "#ffffff"]
+      },
+      "caption-white": {
+        "role": "neutral",
+        "displayName": "Caption White",
+        "canonical": "#fbfbfb",
+        "tonalRamp": ["#262626", "#484848", "#6b6b6b", "#8e8e8e", "#b2b2b2", "#d2d2d2", "#ebebeb", "#fbfbfb"]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Dark Muted",
+        "canonical": "#888888",
+        "tonalRamp": ["#202020", "#393939", "#535353", "#6e6e6e", "#8a8a8a", "#a8a8a8", "#cacaca", "#eeeeee"]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Dark Surface",
+        "canonical": "#222222",
+        "tonalRamp": ["#161616", "#2d2d2d", "#474747", "#626262", "#7f7f7f", "#9f9f9f", "#c4c4c4", "#eeeeee"]
+      },
+      "dark-deep": {
+        "role": "neutral",
+        "displayName": "Dark Deep",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["#0a0a0a", "#242424", "#3f3f3f", "#5c5c5c", "#7b7b7b", "#9d9d9d", "#c3c3c3", "#eeeeee"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Project and about-page titles."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Homepage identity."
+      },
+      "title": {
+        "displayName": "Index Title",
+        "purpose": "Project and experience rows."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Biography and case-study prose."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Dates, categories, company context, and compact metadata."
+      }
+    },
+    "shadows": [
+      {
+        "name": "control-lift",
+        "value": "0 2px 8px rgba(0, 0, 0, 0.05)",
+        "purpose": "Floating project back control."
+      },
+      {
+        "name": "artifact-lift",
+        "value": "0 4px 12px rgba(0, 0, 0, 0.05)",
+        "purpose": "Gallery container against the page canvas."
+      },
+      {
+        "name": "object-lift",
+        "value": "0 2px 4px rgba(0, 0, 0, 0.1)",
+        "purpose": "Small object inside an artifact field."
+      },
+      {
+        "name": "signal-glow",
+        "value": "0 4px 6px rgba(244, 91, 38, 0.2)",
+        "purpose": "Brief social-icon hover response."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-instrument",
+        "value": "cubic-bezier(0.165, 0.84, 0.44, 1)",
+        "purpose": "Project previews and directional movement."
+      },
+      {
+        "name": "duration-fast",
+        "value": "200ms",
+        "purpose": "Hover color and compact icon feedback."
+      },
+      {
+        "name": "duration-standard",
+        "value": "300ms",
+        "purpose": "Preview and route-state feedback."
+      },
+      {
+        "name": "duration-theme",
+        "value": "400ms",
+        "purpose": "Light and dark housing transition."
+      },
+      {
+        "name": "duration-location",
+        "value": "500ms",
+        "purpose": "San Francisco icon crossfade."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "600px"
+      },
+      {
+        "name": "stacked-layout",
+        "value": "800px"
+      },
+      {
+        "name": "preview-hidden",
+        "value": "1000px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Theme Toggle",
+      "kind": "button",
+      "refersTo": "theme-toggle",
+      "description": "Persistent tactile light/dark control with a mechanical click on direct activation.",
+      "html": "<button class=\"ds-theme-toggle\" type=\"button\" aria-label=\"Switch theme\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg></button>",
+      "css": ".ds-theme-toggle { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: transparent; color: #111111; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; } .ds-theme-toggle svg { width: 18px; height: 18px; } .ds-theme-toggle:hover { color: #f45b26; transform: scale(1.1); } .ds-theme-toggle:focus-visible { outline: 2px solid #f45b26; outline-offset: 3px; }"
+    },
+    {
+      "name": "Back Link",
+      "kind": "nav",
+      "refersTo": "project-back-link",
+      "description": "Compact directional navigation over project and secondary-page surfaces.",
+      "html": "<a class=\"ds-back-link\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M19 12H5\"></path><path d=\"m12 19-7-7 7-7\"></path></svg>INDEX</a>",
+      "css": ".ds-back-link { display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px; background: #f2f2ef; color: #111111; font: 500 0.95rem/1.6 -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, sans-serif; letter-spacing: 0.05em; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: color 0.2s ease, transform 0.2s ease; } .ds-back-link svg { width: 16px; height: 16px; margin-right: 8px; transition: transform 0.2s ease; } .ds-back-link:hover, .ds-back-link:focus-visible { color: #f45b26; } .ds-back-link:hover svg, .ds-back-link:focus-visible svg { transform: translateX(-4px); } .ds-back-link:focus-visible { outline: 2px solid #f45b26; outline-offset: 3px; }"
+    },
+    {
+      "name": "Project Index Row",
+      "kind": "nav",
+      "refersTo": "index-row",
+      "description": "The primary portfolio navigation pattern: work title paired with a tabular date.",
+      "html": "<a class=\"ds-index-row\" href=\"#\"><span class=\"ds-index-title\">App Builder in M365 Copilot</span><span class=\"ds-index-meta\">SEP 2025 —</span></a>",
+      "css": ".ds-index-row { position: relative; display: flex; justify-content: space-between; align-items: baseline; padding: 20px 0; border-top: 1px solid #d8d8d6; color: #111111; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, sans-serif; } .ds-index-row::before { content: \"\"; position: absolute; left: 0; top: 25%; bottom: 25%; width: 3px; background: #f45b26; transform: scaleY(0); transition: transform 0.2s ease; } .ds-index-row:hover::before, .ds-index-row:focus-visible::before { transform: scaleY(1); } .ds-index-row:focus-visible { outline: 2px solid #f45b26; outline-offset: 4px; } .ds-index-title { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.01em; } .ds-index-meta { color: #595959; font-size: 0.85rem; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Project Tag",
+      "kind": "chip",
+      "refersTo": "project-tag",
+      "description": "Noninteractive technical metadata attached to a project.",
+      "html": "<span class=\"ds-project-tag\">TypeScript</span>",
+      "css": ".ds-project-tag { display: inline-flex; padding: 4px 12px; border: 1px solid #595959; border-radius: 4px; color: #595959; background: transparent; font: 400 0.8rem/1.6 -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, sans-serif; }"
+    },
+    {
+      "name": "Gallery Container",
+      "kind": "card",
+      "refersTo": "gallery-container",
+      "description": "A restrained artifact frame with a quiet caption rail.",
+      "html": "<figure class=\"ds-gallery\"><div class=\"ds-gallery-field\"></div><figcaption class=\"ds-gallery-caption\">Artifact caption explaining what to notice.</figcaption></figure>",
+      "css": ".ds-gallery { overflow: hidden; margin: 0; border: 1px solid #d8d8d6; border-radius: 8px; background: #f2f2ef; box-shadow: 0 4px 12px rgba(0,0,0,0.05); color: #595959; font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, sans-serif; } .ds-gallery-field { aspect-ratio: 3 / 2; background: #eaeaea; } .ds-gallery-caption { padding: 16px; border-top: 1px solid #d8d8d6; background: #fbfbfb; font-size: 0.85rem; }"
+    },
+    {
+      "name": "San Francisco Location Signature",
+      "kind": "custom",
+      "description": "A personal location label with a cycling family of orange city icons.",
+      "html": "<span class=\"ds-location\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M5 2h14\"></path><path d=\"M6 2l3 20\"></path><path d=\"M18 2l-3 20\"></path><path d=\"M7 8h10\"></path><path d=\"M8 15h8\"></path></svg>SAN FRANCISCO, CA</span>",
+      "css": ".ds-location { display: inline-flex; align-items: center; color: #595959; font: 400 0.85rem/1.6 -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, sans-serif; letter-spacing: 0.05em; text-transform: uppercase; } .ds-location svg { width: 16px; height: 16px; margin-right: 6px; color: #f45b26; }"
+    },
+    {
+      "name": "Blueprint Toast",
+      "kind": "custom",
+      "description": "Hidden developer-mode confirmation revealed by the grid easter egg.",
+      "html": "<div class=\"ds-blueprint-toast\" role=\"status\">DEVELOPER MODE ENABLED</div>",
+      "css": ".ds-blueprint-toast { display: inline-flex; padding: 8px 16px; border-radius: 4px; background: #111111; color: #f2f2ef; font: 400 0.85rem/1.6 monospace; letter-spacing: 0.1em; text-transform: uppercase; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Personal Instrument Index",
+    "overview": "The portfolio behaves like a well-made personal instrument: immediately legible, materially quiet, and rewarding under closer inspection. Its Braun influence comes from usefulness, proportion, typography, honest structure, and disciplined restraint—not from nostalgic imitation. Personality arrives through a few tactile signatures that remain optional and never outrank the work.",
+    "keyCharacteristics": [
+      "Restrained neutral surfaces with one sparing orange signal",
+      "Single-family typography with decisive size and weight contrast",
+      "Narrow, centered reading measures and ruled index structures",
+      "Flat surfaces with light structural borders and rare ambient shadows",
+      "Tactile, personal details that remain optional and non-blocking",
+      "Responsive simplification without loss of meaning"
+    ],
+    "rules": [
+      {
+        "name": "The Evidence-First Rule",
+        "body": "Personality may delight; project visuals must inform. No decorative treatment may substitute for authentic work, decisions, or outcomes.",
+        "section": "overview"
+      },
+      {
+        "name": "The Quiet-at-Rest Rule",
+        "body": "Pages remain visually still and legible by default. Motion responds to navigation, interaction, location, or discovery; reduced-motion users receive an equivalent static state.",
+        "section": "overview"
+      },
+      {
+        "name": "The One Signal Rule",
+        "body": "Signal Orange occupies less than 10% of a page and marks action, state, location, or a deliberate signature. Never use it as general body text on Instrument White.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Housing Rule",
+        "body": "Light and dark themes are equal instrument housings, not separate brands. Preserve role parity when adding a token.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Do not add a display serif, geometric companion, or decorative mono to manufacture character.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Rationing Rule",
+        "body": "Uppercase tracking is reserved for compact metadata and true index labels. Never place an eyebrow above every heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "If a static surface needs a shadow to appear organized, its spacing, border, or tonal relationship is wrong.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Ambient Shadow Rule",
+        "body": "Shadows remain broad, quiet, and below 10% black opacity at rest. Hard shadows and stacked card elevation are prohibited.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let structure, proportion, typography, and authentic project evidence carry the identity.",
+      "Do preserve the cycling San Francisco icons as an expression of place and provide a static reduced-motion state.",
+      "Do preserve the user-triggered mechanical theme sound and blueprint easter egg as optional signatures.",
+      "Do use Signal Orange only for action, state, location, or a deliberate motif.",
+      "Do keep body text within a focused 65–75 character reading measure.",
+      "Do keep every primary action and all content understandable without hover, sound, animation, or discovery of an easter egg.",
+      "Do use authentic screenshots, redacted artifacts, diagrams, and captions when presenting project work."
+    ],
+    "donts": [
+      "Don't use superficial retro-Braun imitation.",
+      "Don't add ornamental industrial-design motifs that do not explain the work.",
+      "Don't fall into generic portfolio templates.",
+      "Don't use nostalgic skeuomorphism.",
+      "Don't use decorative technical diagrams as substitutes for authentic evidence.",
+      "Don't add any treatment that makes the work harder to understand.",
+      "Don't confuse aesthetic cosplay with functional clarity.",
+      "Don't autoplay sound or require motion to understand a state change."
+    ]
+  }
+}

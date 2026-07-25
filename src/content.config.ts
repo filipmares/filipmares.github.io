@@ -39,10 +39,7 @@ const projects = defineCollection({
         dateMeta: z.string(),
         tags: z.array(z.string()),
         sortOrder: z.number(),
-        caseStudy: caseStudySchema.optional(),
-        heroClass: z.string().optional(),
-        heroBackground: z.string().optional(),
-        galleryCaptions: z.array(z.string()).default([]),
+        caseStudy: caseStudySchema,
     }),
 });
 

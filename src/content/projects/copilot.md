@@ -25,12 +25,4 @@ caseStudy:
     - "Validated end-to-end prototype evals for the service-hosted runtime with results comparable to the production agent baseline."
   reflection: "This work reinforced a consistent pattern in AI product engineering: the user-facing experience only feels magical when lifecycle integrity, security policy boundaries, and evaluation loops are explicit. My current focus is continuing to improve enterprise reliability while advancing the runtime direction for future app-generation workflows."
   links: []
-  # Keep artifacts empty until authentic or redacted materials are available.
-  # Example schema entry (do not add until the asset is real and approved):
-  # - src: "/projects/copilot/app-preview-flow-redacted.png"
-  #   alt: "Redacted App Builder preview lifecycle sequence"
-  #   caption: "Preview flow across lifecycle transitions and policy checks."
-  #   kind: "diagram"
-  #   layout: "featured"
-  artifacts: []
 ---

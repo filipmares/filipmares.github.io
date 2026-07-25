@@ -39,7 +39,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
             </nav>
         </header>
 
-        <main>
+        <main id="main-content" tabindex="-1">
             <section>
                 <h2 class="section-label">Selected Projects</h2>
                 <ul class="index-list">
@@ -166,6 +166,17 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+        .location-badge :global(svg) {
+            transition: none;
+            transform: none;
+        }
+
+        .location-badge :global(svg.leaving) {
+            transform: none;
+        }
+    }
+
     .location-badge :global(svg.active) {
         opacity: 1;
         transform: translateY(0);
@@ -194,7 +205,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     }
 
     .bio a:hover {
-        color: var(--accent-orange);
+        color: var(--text-main);
         text-decoration-color: var(--accent-orange);
     }
 
@@ -212,6 +223,9 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         color: var(--text-main);
         text-decoration: none;
         transition: color 0.2s ease;
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
     }
 
     .social-link :global(svg) {
@@ -224,7 +238,16 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         color: var(--accent-orange);
     }
 
+    .social-link:focus-visible {
+        color: var(--accent-orange);
+    }
+
     .social-link:hover :global(svg) {
+        transform: translateY(-2px);
+        filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
+    }
+
+    .social-link:focus-visible :global(svg) {
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
@@ -241,6 +264,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         letter-spacing: 0.05em;
         transition: color 0.2s ease;
         margin-right: auto;
+        min-height: 44px;
     }
 
     .about-link :global(svg) {
@@ -251,10 +275,12 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     }
 
     .about-link:hover {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
-    .about-link:hover :global(svg) {
+    .about-link:hover :global(svg),
+    .about-link:focus-visible :global(svg) {
+        color: var(--accent-orange);
         transform: translateX(4px);
     }
 
@@ -274,12 +300,12 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     }
 
     ul.index-list li {
-        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-bottom: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
         transition: border-color 0.4s ease;
     }
 
     ul.index-list li:first-child {
-        border-top: 1px solid rgba(0,0,0,0.1);
+        border-top: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
     }
 
     :global(:root.dark-theme) ul.index-list li {
@@ -303,9 +329,10 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         justify-content: space-between;
         align-items: baseline;
         padding: 1.25rem 0;
+        min-height: 44px;
         text-decoration: none;
         color: var(--text-main);
-        transition: padding-left 0.3s ease;
+        transition: transform 0.3s ease;
         position: relative;
     }
 
@@ -317,17 +344,28 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         top: 50%;
         transform: translateY(-50%);
         width: 3px;
-        height: 0;
+        height: 50%;
         background-color: var(--accent-orange);
-        transition: height 0.2s ease;
+        transform-origin: center;
+        transition: transform 0.2s ease;
+        transform: translateY(-50%) scaleY(0);
     }
 
     a.index-link:hover::before {
-        height: 50%;
+        transform: translateY(-50%) scaleY(1);
+    }
+
+    a.index-link:focus-visible::before {
+        transform: translateY(-50%) scaleY(1);
     }
 
     a.index-link:hover {
-        padding-left: 1.25rem;
+        transform: translateX(1.25rem);
+        color: var(--text-main);
+    }
+
+    a.index-link:focus-visible {
+        transform: translateX(1.25rem);
         color: var(--text-main);
     }
 
@@ -346,7 +384,23 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     }
 
     a.index-link:hover .index-meta {
+        color: var(--text-main);
+    }
+
+    :global(:root.dark-theme) a.index-link:hover .index-meta,
+    :global(:root.dark-theme) a.index-link:focus-visible .index-meta {
         color: var(--accent-orange);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :global(:root:not(.light-theme)) a.index-link:hover .index-meta,
+        :global(:root:not(.light-theme)) a.index-link:focus-visible .index-meta {
+            color: var(--accent-orange);
+        }
+    }
+
+    a.index-link:focus-visible .index-meta {
+        color: var(--text-main);
     }
 
     /* Responsive */
@@ -383,7 +437,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         }
 
         a.index-link:hover {
-            padding-left: 0;
+            transform: none;
         }
 
         .social-links {
@@ -409,6 +463,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     ];
 
     const iconContainer = document.getElementById('sf-icon-container');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (iconContainer) {
         // Inject all icons but keep them hidden
@@ -418,23 +473,25 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         let currentIconIndex = Math.floor(Math.random() * sfIcons.length);
         svgElements[currentIconIndex].classList.add('active');
 
-        // Cycle through icons every 3 seconds
-        setInterval(() => {
-            const oldIndex = currentIconIndex;
-            currentIconIndex = (currentIconIndex + 1) % sfIcons.length;
+        if (!prefersReducedMotion) {
+            // Cycle through icons every 3 seconds
+            setInterval(() => {
+                const oldIndex = currentIconIndex;
+                currentIconIndex = (currentIconIndex + 1) % sfIcons.length;
 
-            const oldSvg = svgElements[oldIndex];
-            const newSvg = svgElements[currentIconIndex];
+                const oldSvg = svgElements[oldIndex];
+                const newSvg = svgElements[currentIconIndex];
 
-            oldSvg.classList.remove('active');
-            oldSvg.classList.add('leaving');
+                oldSvg.classList.remove('active');
+                oldSvg.classList.add('leaving');
 
-            newSvg.classList.add('active');
+                newSvg.classList.add('active');
 
-            // Clean up leaving class after animation completes
-            setTimeout(() => {
-                oldSvg.classList.remove('leaving');
-            }, 500);
-        }, 3000);
+                // Clean up leaving class after animation completes
+                setTimeout(() => {
+                    oldSvg.classList.remove('leaving');
+                }, 500);
+            }, 3000);
+        }
     }
 </script>

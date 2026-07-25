@@ -15,7 +15,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         <ThemeToggle />
     </nav>
 
-    <main class="error-container">
+    <main class="error-container" id="main-content" tabindex="-1">
         <!-- Interactive Playful Graphic -->
         <div class="interactive-graphic">
             <div class="slot" id="target-slot"></div>
@@ -23,8 +23,8 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         </div>
 
         <h1>404</h1>
-        <p>Component disconnected.</p>
-        <div class="hint" aria-hidden="true">Click the orange piece to repair</div>
+        <p id="repair-status" role="status" aria-live="polite" aria-atomic="true">Component disconnected.</p>
+        <div class="hint">Click the orange piece to repair. You will be rerouted to the index.</div>
     </main>
 </BaseLayout>
 
@@ -72,8 +72,8 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         bottom: 0;
         left: 50px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--text-main) 15%, transparent);
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
     .fallen-piece:hover {
@@ -87,6 +87,17 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         transform: scale(1);
         box-shadow: none;
         cursor: default;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .fallen-piece {
+            transition: none;
+        }
+
+        .fallen-piece:hover {
+            transform: none;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--text-main) 15%, transparent);
+        }
     }
 
     h1 {
@@ -117,18 +128,20 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 <script>
     const piece = document.getElementById('draggable-piece');
     const hint = document.querySelector('.hint') as HTMLElement;
-    const errorText = document.querySelector('.error-container p') as HTMLElement;
+    const errorText = document.getElementById('repair-status') as HTMLElement | null;
 
     piece?.addEventListener('click', () => {
-        if (piece.classList.contains('reconnected')) return;
+        if (piece.classList.contains('reconnected') || !errorText || !hint) return;
 
         if (typeof (window as any).playMechanicalClick === 'function') {
             (window as any).playMechanicalClick();
         }
 
         piece.classList.add('reconnected');
+        piece.setAttribute('aria-disabled', 'true');
+        piece.disabled = true;
 
-        errorText.textContent = "Component repaired. Rerouting...";
+        errorText.textContent = "Component repaired. Rerouting to index…";
         errorText.style.color = "var(--text-main)";
         hint.style.opacity = "0";
 

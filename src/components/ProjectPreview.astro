@@ -25,6 +25,13 @@
         z-index: 10;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+        #preview-canvas {
+            transition: none;
+            transform: translateY(-50%);
+        }
+    }
+
     @media (max-width: 1000px) {
         #preview-canvas {
             display: none !important;
@@ -108,33 +115,43 @@
     const previewCanvas = document.getElementById('preview-canvas') as HTMLElement;
     const previewContent = document.getElementById('preview-content') as HTMLElement;
     const container = document.querySelector('.container') as HTMLElement;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const showPreview = (target: HTMLElement) => {
+        const visualType = target.getAttribute('data-visual');
+        previewContent.className = `preview-state active visual-${visualType}`;
+
+        const linkRect = target.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2);
+
+        previewCanvas.style.top = `${relativeY}px`;
+        previewCanvas.style.opacity = '1';
+        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(0)';
+    };
+
+    const hidePreview = () => {
+        previewCanvas.style.opacity = '0';
+        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(-10px)';
+
+        if (prefersReducedMotion) {
+            previewContent.className = '';
+            return;
+        }
+
+        setTimeout(() => {
+            if (previewCanvas.style.opacity === '0') {
+                previewContent.className = '';
+            }
+        }, 300);
+    };
 
     if (projectLinks.length && previewCanvas && previewContent && container) {
         projectLinks.forEach(link => {
-            link.addEventListener('mouseenter', (e) => {
-                const target = e.currentTarget as HTMLElement;
-                const visualType = target.getAttribute('data-visual');
-                previewContent.className = `preview-state active visual-${visualType}`;
-
-                // Calculate vertical position relative to the container
-                const linkRect = target.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2);
-
-                previewCanvas.style.top = `${relativeY}px`;
-                previewCanvas.style.opacity = '1';
-                previewCanvas.style.transform = 'translateY(-50%) translateX(0)';
-            });
-
-            link.addEventListener('mouseleave', () => {
-                previewCanvas.style.opacity = '0';
-                previewCanvas.style.transform = 'translateY(-50%) translateX(-10px)';
-                setTimeout(() => {
-                    if (previewCanvas.style.opacity === '0') {
-                        previewContent.className = '';
-                    }
-                }, 300);
-            });
+            link.addEventListener('mouseenter', (e) => showPreview(e.currentTarget as HTMLElement));
+            link.addEventListener('focus', (e) => showPreview(e.currentTarget as HTMLElement));
+            link.addEventListener('mouseleave', hidePreview);
+            link.addEventListener('blur', hidePreview);
         });
     }
 </script>

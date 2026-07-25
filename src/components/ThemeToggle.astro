@@ -6,13 +6,20 @@
  */
 ---
 
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode" transition:persist>
+<button
+    class="theme-toggle"
+    id="theme-toggle"
+    type="button"
+    aria-label="Switch to dark theme"
+    aria-pressed="false"
+    transition:persist
+>
     <!-- Moon icon (shows in light mode) -->
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
     <!-- Sun icon (shows in dark mode) -->
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -75,24 +82,48 @@
     (window as any).playMechanicalClick = playMechanicalClick;
 
     // Theme toggle logic
-    const toggleBtn = document.getElementById('theme-toggle')!;
+    const toggleBtn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
     const root = document.documentElement;
-    const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-    toggleBtn.addEventListener('click', () => {
-        playMechanicalClick();
+    const getStoredTheme = (): 'light' | 'dark' | null => {
+        const storedTheme = localStorage.getItem('theme');
+        return storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : null;
+    };
 
-        const isCurrentlyDark = root.classList.contains('dark-theme') ||
-            (!root.classList.contains('light-theme') && osPrefersDark);
+    const isDarkThemeActive = (): boolean => {
+        const storedTheme = getStoredTheme();
+        if (storedTheme === 'dark') return true;
+        if (storedTheme === 'light') return false;
+        return osPrefersDark.matches;
+    };
 
-        if (isCurrentlyDark) {
-            root.classList.remove('dark-theme');
-            root.classList.add('light-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            root.classList.remove('light-theme');
-            root.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
+    const syncToggleState = () => {
+        if (!toggleBtn) return;
+        const isDark = isDarkThemeActive();
+        toggleBtn.setAttribute('aria-pressed', String(isDark));
+        toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    };
+
+    if (toggleBtn && !toggleBtn.dataset.bound) {
+        toggleBtn.dataset.bound = 'true';
+
+        toggleBtn.addEventListener('click', () => {
+            playMechanicalClick();
+            const nextTheme = isDarkThemeActive() ? 'light' : 'dark';
+
+            root.classList.remove('light-theme', 'dark-theme');
+            root.classList.add(`${nextTheme}-theme`);
+            localStorage.setItem('theme', nextTheme);
+            syncToggleState();
+        });
+
+        osPrefersDark.addEventListener('change', () => {
+            if (!getStoredTheme()) {
+                syncToggleState();
+            }
+        });
+    }
+
+    syncToggleState();
 </script>

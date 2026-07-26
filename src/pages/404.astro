@@ -24,7 +24,10 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 
         <h1>404</h1>
         <p id="repair-status" role="status" aria-live="polite" aria-atomic="true">Component disconnected.</p>
-        <div class="hint">Click the orange piece to repair. You will be rerouted to the index.</div>
+        <div class="repair-actions">
+            <a id="repair-home-link" class="repair-home-link" href="/" hidden>Home</a>
+        </div>
+        <div class="hint">Click the orange piece to repair.</div>
     </main>
 </BaseLayout>
 
@@ -69,24 +72,48 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         background-color: var(--accent-orange);
         border-radius: 50%;
         position: absolute;
-        bottom: 0;
-        left: 50px;
+        top: 0;
+        left: 30px;
+        transform: translate(20px, 120px);
         cursor: pointer;
         box-shadow: 0 4px 12px color-mix(in srgb, var(--text-main) 15%, transparent);
-        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
     .fallen-piece:hover {
-        transform: scale(1.05);
+        transform: translate(20px, 120px) scale(1.05);
         box-shadow: 0 6px 16px rgba(244, 91, 38, 0.3);
     }
 
     .fallen-piece.reconnected {
-        bottom: 120px;
-        left: 30px;
-        transform: scale(1);
+        transform: translate(0, 0);
         box-shadow: none;
         cursor: default;
+    }
+
+    .repair-actions {
+        min-height: 44px;
+        margin-bottom: 0.75rem;
+    }
+
+    .repair-home-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        color: var(--text-main);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-color: var(--text-muted);
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .repair-home-link:hover,
+    .repair-home-link:focus-visible {
+        text-decoration-color: var(--accent-orange);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -95,7 +122,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         }
 
         .fallen-piece:hover {
-            transform: none;
+            transform: translate(20px, 120px);
             box-shadow: 0 4px 12px color-mix(in srgb, var(--text-main) 15%, transparent);
         }
     }
@@ -129,9 +156,10 @@ import ThemeToggle from '../components/ThemeToggle.astro';
     const piece = document.getElementById('draggable-piece');
     const hint = document.querySelector('.hint') as HTMLElement;
     const errorText = document.getElementById('repair-status') as HTMLElement | null;
+    const homeLink = document.getElementById('repair-home-link') as HTMLAnchorElement | null;
 
     piece?.addEventListener('click', () => {
-        if (piece.classList.contains('reconnected') || !errorText || !hint) return;
+        if (piece.classList.contains('reconnected') || !errorText || !hint || !homeLink) return;
 
         if (typeof (window as any).playMechanicalClick === 'function') {
             (window as any).playMechanicalClick();
@@ -141,12 +169,10 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         piece.setAttribute('aria-disabled', 'true');
         piece.disabled = true;
 
-        errorText.textContent = "Component repaired. Rerouting to index…";
+        errorText.textContent = "Component repaired. Return to the index when you are ready.";
         errorText.style.color = "var(--text-main)";
-        hint.style.opacity = "0";
-
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 800);
+        hint.style.display = "none";
+        homeLink.hidden = false;
+        homeLink.focus();
     });
 </script>

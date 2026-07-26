@@ -40,13 +40,14 @@ const projects = (await getCollection('projects'))
             </div>
             <p class="bio">Principal Software Engineer at Microsoft. Building App Builder in M365 Copilot. Previously led UX across Power Apps AI Agents, App Copilot, Cards, and Lobe (Machine Learning Made Easy). Formerly a founding engineer at Talko and Pulse.</p>
 
-            <nav class="social-links" aria-label="Social links">
+            <nav class="social-links" aria-label="Professional actions">
                 <a href="/about" class="about-link" style="view-transition-name: about-link;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     About
                 </a>
-                <a href="https://www.linkedin.com/in/filipmares/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/filipmares/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    LinkedIn
                 </a>
             </nav>
         </header>
@@ -141,6 +142,7 @@ const projects = (await getCollection('projects'))
         margin-bottom: 0;
         display: inline-flex;
         align-items: center;
+        text-wrap: balance;
     }
 
     /* Location Badge */
@@ -202,7 +204,8 @@ const projects = (await getCollection('projects'))
         font-size: 1.15rem;
         color: var(--text-muted);
         margin-bottom: 2rem;
-        max-width: 90%;
+        max-width: 72ch;
+        text-wrap: pretty;
     }
 
     .bio a {
@@ -223,41 +226,51 @@ const projects = (await getCollection('projects'))
     .social-links {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1rem;
         margin-bottom: 4rem;
+        flex-wrap: wrap;
     }
 
     .social-link {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         color: var(--text-main);
         text-decoration: none;
         transition: color 0.2s ease;
-        min-width: 44px;
         min-height: 44px;
-        justify-content: center;
+        line-height: 1;
+    }
+
+    .linkedin-link {
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        gap: 0.5rem;
     }
 
     .social-link :global(svg) {
-        width: 20px;
-        height: 20px;
-        transition: transform 0.2s ease, filter 0.2s ease;
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease, filter 0.2s ease, color 0.2s ease;
     }
 
     .social-link:hover {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:focus-visible {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:hover :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
 
     .social-link:focus-visible :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
@@ -501,34 +514,44 @@ const projects = (await getCollection('projects'))
 </style>
 
 <script>
-    // Random SF Icon Injector
+    interface SfIconLifecycleController {
+        cleanup: (() => void) | null;
+        lifecycleBound: boolean;
+    }
+
+    const sfIconControllerKey = '__fmSfIconLifecycleController';
+    const existingSfController = (window as any)[sfIconControllerKey] as SfIconLifecycleController | undefined;
+    const sfController: SfIconLifecycleController = existingSfController ?? {
+        cleanup: null,
+        lifecycleBound: false,
+    };
+    (window as any)[sfIconControllerKey] = sfController;
+
     const sfIcons = [
-        // Sutro Tower
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14"></path><path d="M6 2l3 20"></path><path d="M18 2l-3 20"></path><path d="M7 8h10"></path><path d="M8 15h8"></path><path d="M12 2v20"></path><path d="M6 2l6 6"></path><path d="M18 2l-6 6"></path></svg>`,
-        // Transamerica Pyramid
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L6 22h12L12 2z"></path><path d="M12 2v20"></path><path d="M9.5 12h5"></path><path d="M8 17h8"></path></svg>`,
-        // Golden Gate Bridge
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V6M18 22V6"></path><path d="M2 14c3-4 6-6 10-6s7 2 10 6"></path><path d="M6 10v4M18 10v4"></path><path d="M2 14h20"></path></svg>`,
-        // Cable Car
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"></rect><path d="M4 12h16"></path><path d="M8 6v6"></path><path d="M16 6v6"></path><circle cx="8" cy="18" r="2"></circle><circle cx="16" cy="18" r="2"></circle><path d="M12 2v4"></path></svg>`,
-        // Fog over water
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19h8"></path><path d="M5 15h14"></path><path d="M6 11h11a3 3 0 0 0-3-3 4 4 0 0 0-7 2 2 2 0 0 0-1 3z"></path></svg>`
     ];
 
-    const iconContainer = document.getElementById('sf-icon-container');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const initializeSfIcons = () => {
+        const iconContainer = document.getElementById('sf-icon-container');
+        if (!iconContainer) return () => {};
 
-    if (iconContainer) {
-        // Inject all icons but keep them hidden
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         iconContainer.innerHTML = sfIcons.join('');
-        const svgElements = iconContainer.querySelectorAll('svg');
+        const svgElements = Array.from(iconContainer.querySelectorAll<SVGElement>('svg'));
+        if (!svgElements.length) return () => {};
 
         let currentIconIndex = Math.floor(Math.random() * sfIcons.length);
         svgElements[currentIconIndex].classList.add('active');
 
+        let intervalId: number | null = null;
+        const timeoutIds: number[] = [];
+
         if (!prefersReducedMotion) {
-            // Cycle through icons every 3 seconds
-            setInterval(() => {
+            intervalId = window.setInterval(() => {
                 const oldIndex = currentIconIndex;
                 currentIconIndex = (currentIconIndex + 1) % sfIcons.length;
 
@@ -537,14 +560,38 @@ const projects = (await getCollection('projects'))
 
                 oldSvg.classList.remove('active');
                 oldSvg.classList.add('leaving');
-
                 newSvg.classList.add('active');
 
-                // Clean up leaving class after animation completes
-                setTimeout(() => {
+                const timeoutId = window.setTimeout(() => {
                     oldSvg.classList.remove('leaving');
                 }, 500);
+                timeoutIds.push(timeoutId);
             }, 3000);
         }
+
+        return () => {
+            if (intervalId !== null) {
+                window.clearInterval(intervalId);
+                intervalId = null;
+            }
+            timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
+            iconContainer.innerHTML = '';
+        };
+    };
+
+    const runSfIconSetup = () => {
+        sfController.cleanup?.();
+        sfController.cleanup = initializeSfIcons();
+    };
+
+    if (!sfController.lifecycleBound) {
+        document.addEventListener('astro:page-load', runSfIconSetup);
+        document.addEventListener('astro:before-swap', () => {
+            sfController.cleanup?.();
+            sfController.cleanup = null;
+        });
+        sfController.lifecycleBound = true;
     }
+
+    runSfIconSetup();
 </script>

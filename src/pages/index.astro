@@ -40,13 +40,14 @@ const projects = (await getCollection('projects'))
             </div>
             <p class="bio">Principal Software Engineer at Microsoft. Building App Builder in M365 Copilot. Previously led UX across Power Apps AI Agents, App Copilot, Cards, and Lobe (Machine Learning Made Easy). Formerly a founding engineer at Talko and Pulse.</p>
 
-            <nav class="social-links" aria-label="Social links">
+            <nav class="social-links" aria-label="Professional actions">
                 <a href="/about" class="about-link" style="view-transition-name: about-link;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     About
                 </a>
-                <a href="https://www.linkedin.com/in/filipmares/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/filipmares/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    LinkedIn
                 </a>
             </nav>
         </header>
@@ -141,6 +142,7 @@ const projects = (await getCollection('projects'))
         margin-bottom: 0;
         display: inline-flex;
         align-items: center;
+        text-wrap: balance;
     }
 
     /* Location Badge */
@@ -202,7 +204,8 @@ const projects = (await getCollection('projects'))
         font-size: 1.15rem;
         color: var(--text-muted);
         margin-bottom: 2rem;
-        max-width: 90%;
+        max-width: 72ch;
+        text-wrap: pretty;
     }
 
     .bio a {
@@ -223,41 +226,51 @@ const projects = (await getCollection('projects'))
     .social-links {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1rem;
         margin-bottom: 4rem;
+        flex-wrap: wrap;
     }
 
     .social-link {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         color: var(--text-main);
         text-decoration: none;
         transition: color 0.2s ease;
-        min-width: 44px;
         min-height: 44px;
-        justify-content: center;
+        line-height: 1;
+    }
+
+    .linkedin-link {
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        gap: 0.5rem;
     }
 
     .social-link :global(svg) {
-        width: 20px;
-        height: 20px;
-        transition: transform 0.2s ease, filter 0.2s ease;
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease, filter 0.2s ease, color 0.2s ease;
     }
 
     .social-link:hover {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:focus-visible {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:hover :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
 
     .social-link:focus-visible :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }

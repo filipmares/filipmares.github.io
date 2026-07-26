@@ -19,21 +19,28 @@
     #preview-canvas {
         position: absolute;
         left: 100%;
-        top: 50%;
-        transform: translateY(-50%) translateX(-10px);
+        top: 0;
         margin-left: 4rem;
         width: 320px;
         height: 240px;
         pointer-events: none;
         opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), top 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        --preview-x: -10px;
+        --preview-y: 0px;
+        transform: translate3d(var(--preview-x), var(--preview-y), 0);
+        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         z-index: 10;
+    }
+
+    #preview-canvas.is-visible {
+        opacity: 1;
+        --preview-x: 0px;
     }
 
     @media (prefers-reduced-motion: reduce) {
         #preview-canvas {
             transition: none;
-            transform: translateY(-50%);
+            --preview-x: 0px;
         }
     }
 
@@ -92,7 +99,6 @@
     const previewDescription = document.getElementById('preview-description') as HTMLElement;
     const previewTags = document.getElementById('preview-tags') as HTMLElement;
     const container = document.querySelector('.container') as HTMLElement;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const setPreviewContent = (target: HTMLElement) => {
         previewContext.textContent = target.dataset.previewContext ?? '';
@@ -106,16 +112,14 @@
 
         const linkRect = target.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
-        const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2);
+        const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2) - (previewCanvas.offsetHeight / 2);
 
-        previewCanvas.style.top = `${relativeY}px`;
-        previewCanvas.style.opacity = '1';
-        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(0)';
+        previewCanvas.style.setProperty('--preview-y', `${relativeY}px`);
+        previewCanvas.classList.add('is-visible');
     };
 
     const hidePreview = () => {
-        previewCanvas.style.opacity = '0';
-        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(-10px)';
+        previewCanvas.classList.remove('is-visible');
     };
 
     if (projectLinks.length && previewCanvas && previewContext && previewTitle && previewDescription && previewTags && container) {

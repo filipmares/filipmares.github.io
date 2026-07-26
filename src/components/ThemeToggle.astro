@@ -6,13 +6,20 @@
  */
 ---
 
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode" transition:persist>
+<button
+    class="theme-toggle"
+    id="theme-toggle"
+    type="button"
+    aria-label="Switch to dark theme"
+    aria-pressed="false"
+    transition:persist
+>
     <!-- Moon icon (shows in light mode) -->
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
     <!-- Sun icon (shows in dark mode) -->
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -74,25 +81,111 @@
     // Expose globally so BlueprintMode can reuse it
     (window as any).playMechanicalClick = playMechanicalClick;
 
-    // Theme toggle logic
-    const toggleBtn = document.getElementById('theme-toggle')!;
-    const root = document.documentElement;
-    const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    type ThemeMode = 'light' | 'dark';
 
-    toggleBtn.addEventListener('click', () => {
-        playMechanicalClick();
+    interface ThemeToggleController {
+        button: HTMLButtonElement | null;
+        buttonClickHandler: ((event: Event) => void) | null;
+        osMediaQuery: MediaQueryList;
+        osChangeHandler: ((event: MediaQueryListEvent) => void) | null;
+        lifecycleBound: boolean;
+    }
 
-        const isCurrentlyDark = root.classList.contains('dark-theme') ||
-            (!root.classList.contains('light-theme') && osPrefersDark);
+    const controllerKey = '__fmThemeToggleController';
+    const existingController = (window as any)[controllerKey] as ThemeToggleController | undefined;
+    const controller: ThemeToggleController = existingController ?? {
+        button: null,
+        buttonClickHandler: null,
+        osMediaQuery: window.matchMedia('(prefers-color-scheme: dark)'),
+        osChangeHandler: null,
+        lifecycleBound: false,
+    };
+    (window as any)[controllerKey] = controller;
 
-        if (isCurrentlyDark) {
-            root.classList.remove('dark-theme');
-            root.classList.add('light-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            root.classList.remove('light-theme');
-            root.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
+    const getStoredTheme = (): ThemeMode | null => {
+        const storedTheme = localStorage.getItem('theme');
+        return storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : null;
+    };
+
+    const getEffectiveTheme = (): ThemeMode => {
+        const storedTheme = getStoredTheme();
+        if (storedTheme) return storedTheme;
+        return controller.osMediaQuery.matches ? 'dark' : 'light';
+    };
+
+    const applyThemePreference = () => {
+        const storedTheme = getStoredTheme();
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        if (storedTheme) {
+            document.documentElement.classList.add(`${storedTheme}-theme`);
         }
-    });
+    };
+
+    const syncToggleState = (button: HTMLButtonElement | null) => {
+        if (!button) return;
+        const isDark = getEffectiveTheme() === 'dark';
+        button.setAttribute('aria-pressed', String(isDark));
+        button.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    };
+
+    const bindOsPreferenceListener = () => {
+        if (controller.osChangeHandler) return;
+        controller.osChangeHandler = () => {
+            if (!getStoredTheme()) {
+                applyThemePreference();
+            }
+            syncToggleState(controller.button);
+        };
+        controller.osMediaQuery.addEventListener('change', controller.osChangeHandler);
+    };
+
+    const bindToggleButton = (button: HTMLButtonElement | null) => {
+        if (controller.button === button) {
+            syncToggleState(button);
+            return;
+        }
+
+        if (controller.button && controller.buttonClickHandler) {
+            controller.button.removeEventListener('click', controller.buttonClickHandler);
+        }
+
+        controller.button = button;
+        controller.buttonClickHandler = null;
+
+        if (!button) return;
+
+        const clickHandler = () => {
+            playMechanicalClick();
+            const nextTheme: ThemeMode = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', nextTheme);
+            applyThemePreference();
+            syncToggleState(button);
+        };
+
+        controller.buttonClickHandler = clickHandler;
+        button.addEventListener('click', clickHandler);
+        syncToggleState(button);
+    };
+
+    const initializeThemeToggle = () => {
+        applyThemePreference();
+        bindOsPreferenceListener();
+        bindToggleButton(document.getElementById('theme-toggle') as HTMLButtonElement | null);
+    };
+
+    const cleanupThemeToggleForSwap = () => {
+        if (controller.button && controller.buttonClickHandler) {
+            controller.button.removeEventListener('click', controller.buttonClickHandler);
+        }
+        controller.button = null;
+        controller.buttonClickHandler = null;
+    };
+
+    if (!controller.lifecycleBound) {
+        document.addEventListener('astro:page-load', initializeThemeToggle);
+        document.addEventListener('astro:before-swap', cleanupThemeToggleForSwap);
+        controller.lifecycleBound = true;
+    }
+
+    initializeThemeToggle();
 </script>

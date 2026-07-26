@@ -81,49 +81,102 @@
     // Expose globally so BlueprintMode can reuse it
     (window as any).playMechanicalClick = playMechanicalClick;
 
-    // Theme toggle logic
-    const toggleBtn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
-    const root = document.documentElement;
-    const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    type ThemeMode = 'light' | 'dark';
 
-    const getStoredTheme = (): 'light' | 'dark' | null => {
+    interface ThemeToggleController {
+        button: HTMLButtonElement | null;
+        buttonClickHandler: ((event: Event) => void) | null;
+        osMediaQuery: MediaQueryList;
+        osChangeHandler: ((event: MediaQueryListEvent) => void) | null;
+        lifecycleBound: boolean;
+    }
+
+    const controllerKey = '__fmThemeToggleController';
+    const existingController = (window as any)[controllerKey] as ThemeToggleController | undefined;
+    const controller: ThemeToggleController = existingController ?? {
+        button: null,
+        buttonClickHandler: null,
+        osMediaQuery: window.matchMedia('(prefers-color-scheme: dark)'),
+        osChangeHandler: null,
+        lifecycleBound: false,
+    };
+    (window as any)[controllerKey] = controller;
+
+    const getStoredTheme = (): ThemeMode | null => {
         const storedTheme = localStorage.getItem('theme');
         return storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : null;
     };
 
-    const isDarkThemeActive = (): boolean => {
+    const getEffectiveTheme = (): ThemeMode => {
         const storedTheme = getStoredTheme();
-        if (storedTheme === 'dark') return true;
-        if (storedTheme === 'light') return false;
-        return osPrefersDark.matches;
+        if (storedTheme) return storedTheme;
+        return controller.osMediaQuery.matches ? 'dark' : 'light';
     };
 
-    const syncToggleState = () => {
-        if (!toggleBtn) return;
-        const isDark = isDarkThemeActive();
-        toggleBtn.setAttribute('aria-pressed', String(isDark));
-        toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    const applyThemePreference = () => {
+        const storedTheme = getStoredTheme();
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        if (storedTheme) {
+            document.documentElement.classList.add(`${storedTheme}-theme`);
+        }
     };
 
-    if (toggleBtn && !toggleBtn.dataset.bound) {
-        toggleBtn.dataset.bound = 'true';
+    const syncToggleState = (button: HTMLButtonElement | null) => {
+        if (!button) return;
+        const isDark = getEffectiveTheme() === 'dark';
+        button.setAttribute('aria-pressed', String(isDark));
+        button.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    };
 
-        toggleBtn.addEventListener('click', () => {
-            playMechanicalClick();
-            const nextTheme = isDarkThemeActive() ? 'light' : 'dark';
-
-            root.classList.remove('light-theme', 'dark-theme');
-            root.classList.add(`${nextTheme}-theme`);
-            localStorage.setItem('theme', nextTheme);
-            syncToggleState();
-        });
-
-        osPrefersDark.addEventListener('change', () => {
+    const bindOsPreferenceListener = () => {
+        if (controller.osChangeHandler) return;
+        controller.osChangeHandler = () => {
             if (!getStoredTheme()) {
-                syncToggleState();
+                applyThemePreference();
             }
-        });
+            syncToggleState(controller.button);
+        };
+        controller.osMediaQuery.addEventListener('change', controller.osChangeHandler);
+    };
+
+    const bindToggleButton = (button: HTMLButtonElement | null) => {
+        if (controller.button === button) {
+            syncToggleState(button);
+            return;
+        }
+
+        if (controller.button && controller.buttonClickHandler) {
+            controller.button.removeEventListener('click', controller.buttonClickHandler);
+        }
+
+        controller.button = button;
+        controller.buttonClickHandler = null;
+
+        if (!button) return;
+
+        const clickHandler = () => {
+            playMechanicalClick();
+            const nextTheme: ThemeMode = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', nextTheme);
+            applyThemePreference();
+            syncToggleState(button);
+        };
+
+        controller.buttonClickHandler = clickHandler;
+        button.addEventListener('click', clickHandler);
+        syncToggleState(button);
+    };
+
+    const initializeThemeToggle = () => {
+        applyThemePreference();
+        bindOsPreferenceListener();
+        bindToggleButton(document.getElementById('theme-toggle') as HTMLButtonElement | null);
+    };
+
+    if (!controller.lifecycleBound) {
+        document.addEventListener('astro:page-load', initializeThemeToggle);
+        controller.lifecycleBound = true;
     }
 
-    syncToggleState();
+    initializeThemeToggle();
 </script>

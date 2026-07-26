@@ -92,42 +92,94 @@
 </style>
 
 <script>
-    const projectLinks = document.querySelectorAll('.index-link[data-preview-title]');
-    const previewCanvas = document.getElementById('preview-canvas') as HTMLElement;
-    const previewContext = document.getElementById('preview-context') as HTMLElement;
-    const previewTitle = document.getElementById('preview-title') as HTMLElement;
-    const previewDescription = document.getElementById('preview-description') as HTMLElement;
-    const previewTags = document.getElementById('preview-tags') as HTMLElement;
-    const container = document.querySelector('.container') as HTMLElement;
-
-    const setPreviewContent = (target: HTMLElement) => {
-        previewContext.textContent = target.dataset.previewContext ?? '';
-        previewTitle.textContent = target.dataset.previewTitle ?? '';
-        previewDescription.textContent = target.dataset.previewDescription ?? '';
-        previewTags.textContent = target.dataset.previewTags ?? '';
-    };
-
-    const showPreview = (target: HTMLElement) => {
-        setPreviewContent(target);
-
-        const linkRect = target.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2) - (previewCanvas.offsetHeight / 2);
-
-        previewCanvas.style.setProperty('--preview-y', `${relativeY}px`);
-        previewCanvas.classList.add('is-visible');
-    };
-
-    const hidePreview = () => {
-        previewCanvas.classList.remove('is-visible');
-    };
-
-    if (projectLinks.length && previewCanvas && previewContext && previewTitle && previewDescription && previewTags && container) {
-        projectLinks.forEach(link => {
-            link.addEventListener('mouseenter', (e) => showPreview(e.currentTarget as HTMLElement));
-            link.addEventListener('focus', (e) => showPreview(e.currentTarget as HTMLElement));
-            link.addEventListener('mouseleave', hidePreview);
-            link.addEventListener('blur', hidePreview);
-        });
+    interface ProjectPreviewController {
+        cleanup: (() => void) | null;
+        lifecycleBound: boolean;
     }
+
+    const controllerKey = '__fmProjectPreviewController';
+    const existingController = (window as any)[controllerKey] as ProjectPreviewController | undefined;
+    const controller: ProjectPreviewController = existingController ?? {
+        cleanup: null,
+        lifecycleBound: false,
+    };
+    (window as any)[controllerKey] = controller;
+
+    const initializeProjectPreview = () => {
+        const projectLinks = Array.from(document.querySelectorAll<HTMLElement>('.index-link[data-preview-title]'));
+        const previewCanvas = document.getElementById('preview-canvas') as HTMLElement | null;
+        const previewContext = document.getElementById('preview-context') as HTMLElement | null;
+        const previewTitle = document.getElementById('preview-title') as HTMLElement | null;
+        const previewDescription = document.getElementById('preview-description') as HTMLElement | null;
+        const previewTags = document.getElementById('preview-tags') as HTMLElement | null;
+        const container = document.querySelector('.container') as HTMLElement | null;
+
+        if (!projectLinks.length || !previewCanvas || !previewContext || !previewTitle || !previewDescription || !previewTags || !container) {
+            return () => {};
+        }
+
+        const setPreviewContent = (target: HTMLElement) => {
+            previewContext.textContent = target.dataset.previewContext ?? '';
+            previewTitle.textContent = target.dataset.previewTitle ?? '';
+            previewDescription.textContent = target.dataset.previewDescription ?? '';
+            previewTags.textContent = target.dataset.previewTags ?? '';
+        };
+
+        const showPreview = (target: HTMLElement) => {
+            setPreviewContent(target);
+
+            const linkRect = target.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2) - (previewCanvas.offsetHeight / 2);
+
+            previewCanvas.style.setProperty('--preview-y', `${relativeY}px`);
+            previewCanvas.classList.add('is-visible');
+        };
+
+        const hidePreview = () => {
+            previewCanvas.classList.remove('is-visible');
+        };
+
+        const listenerCleanup: Array<() => void> = [];
+
+        projectLinks.forEach((link) => {
+            const handleMouseEnter = (event: Event) => showPreview(event.currentTarget as HTMLElement);
+            const handleFocus = (event: Event) => showPreview(event.currentTarget as HTMLElement);
+            const handleMouseLeave = () => hidePreview();
+            const handleBlur = () => hidePreview();
+
+            link.addEventListener('mouseenter', handleMouseEnter);
+            link.addEventListener('focus', handleFocus);
+            link.addEventListener('mouseleave', handleMouseLeave);
+            link.addEventListener('blur', handleBlur);
+
+            listenerCleanup.push(() => {
+                link.removeEventListener('mouseenter', handleMouseEnter);
+                link.removeEventListener('focus', handleFocus);
+                link.removeEventListener('mouseleave', handleMouseLeave);
+                link.removeEventListener('blur', handleBlur);
+            });
+        });
+
+        return () => {
+            hidePreview();
+            listenerCleanup.forEach((dispose) => dispose());
+        };
+    };
+
+    const runProjectPreviewSetup = () => {
+        controller.cleanup?.();
+        controller.cleanup = initializeProjectPreview();
+    };
+
+    if (!controller.lifecycleBound) {
+        document.addEventListener('astro:page-load', runProjectPreviewSetup);
+        document.addEventListener('astro:before-swap', () => {
+            controller.cleanup?.();
+            controller.cleanup = null;
+        });
+        controller.lifecycleBound = true;
+    }
+
+    runProjectPreviewSetup();
 </script>

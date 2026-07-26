@@ -125,7 +125,7 @@
       {
         "name": "ease-instrument",
         "value": "cubic-bezier(0.165, 0.84, 0.44, 1)",
-        "purpose": "Project previews and directional movement."
+        "purpose": "Factual project-preview panel movement and directional navigation feedback."
       },
       {
         "name": "duration-fast",

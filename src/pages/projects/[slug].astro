@@ -1,9 +1,8 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ThemeToggle from '../../components/ThemeToggle.astro';
 import CaseStudyContent from '../../components/projects/CaseStudyContent.astro';
-import LegacyProjectCompatibility from '../../components/projects/LegacyProjectCompatibility.astro';
 import ProjectChronologyNav from '../../components/projects/ProjectChronologyNav.astro';
 
 export async function getStaticPaths() {
@@ -15,9 +14,10 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { title, description, companyLabel, tags, heroClass, galleryCaptions, caseStudy } = project.data;
-const hasStructuredCaseStudy = caseStudy !== undefined;
-const Content = hasStructuredCaseStudy ? null : (await render(project)).Content;
+const { title, description, companyLabel, tags, caseStudy } = project.data;
+if (!caseStudy) {
+    throw new Error(`Project "${project.id}" is missing required caseStudy data.`);
+}
 const slug = project.id;
 const allProjects = await getCollection('projects');
 const sortedProjects = [...allProjects].sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -45,8 +45,6 @@ const olderProject = currentProjectIndex >= 0 && currentProjectIndex < sortedPro
         <ThemeToggle />
     </nav>
 
-    {!hasStructuredCaseStudy && heroClass && <div class={`hero-banner legacy-project-hero ${heroClass}`}></div>}
-
     <div class="project-container">
         <header class="project-header">
             <span class="company-label">{companyLabel}</span>
@@ -58,133 +56,8 @@ const olderProject = currentProjectIndex >= 0 && currentProjectIndex < sortedPro
             </div>
         </header>
 
-        {hasStructuredCaseStudy && caseStudy ? (
-            <CaseStudyContent caseStudy={caseStudy} />
-        ) : (
-            <LegacyProjectCompatibility galleryCaptions={galleryCaptions}>
-                {Content && <Content />}
-            </LegacyProjectCompatibility>
-        )}
+        <CaseStudyContent caseStudy={caseStudy} />
 
         <ProjectChronologyNav newerProject={newerProject} olderProject={olderProject} />
     </div>
 </BaseLayout>
-
-<style>
-    /* ── Copilot hero ── */
-    .hero-copilot {
-        background: var(--canvas-bg-copilot);
-        view-transition-name: project-hero-copilot;
-    }
-
-    .hero-copilot::before {
-        content: '';
-        width: 120px;
-        height: 120px;
-        border: 8px solid var(--text-main);
-        border-radius: 24px;
-        background-color: var(--canvas-fg-copilot);
-        position: relative;
-        z-index: 2;
-    }
-
-    .hero-copilot::after {
-        content: '';
-        width: 60px;
-        height: 60px;
-        background-color: var(--accent-orange);
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-        margin-top: -40px;
-        margin-left: 40px;
-    }
-
-    /* ── Power Apps hero ── */
-    .hero-powerapps {
-        background: var(--canvas-bg-powerapps);
-        view-transition-name: project-hero-powerapps;
-    }
-
-    .hero-powerapps::before {
-        content: '';
-        width: 120px;
-        height: 60px;
-        background-color: var(--text-main);
-        border-radius: 6px;
-        position: relative;
-        z-index: 2;
-    }
-
-    .hero-powerapps::after {
-        content: '';
-        width: 30px;
-        height: 30px;
-        background-color: var(--accent-orange);
-        position: absolute;
-        bottom: 30%;
-        right: 30%;
-        border-radius: 4px;
-        z-index: 1;
-    }
-
-    /* ── Lobe hero ── */
-    .hero-lobe {
-        background: var(--canvas-bg-lobe);
-        view-transition-name: project-hero-lobe;
-    }
-
-    .hero-lobe::before {
-        content: '';
-        width: 0;
-        height: 0;
-        border-left: 60px solid transparent;
-        border-right: 60px solid transparent;
-        border-bottom: 96px solid var(--text-main);
-        position: absolute;
-        z-index: 2;
-    }
-
-    .hero-lobe::after {
-        content: '';
-        width: 72px;
-        height: 72px;
-        border: 8px solid var(--accent-orange);
-        border-radius: 50%;
-        position: absolute;
-        top: 30%;
-        left: 30%;
-        z-index: 1;
-    }
-
-    /* ── Skype hero ── */
-    .hero-skype {
-        background: var(--canvas-bg-copilot);
-        view-transition-name: project-hero-skype;
-    }
-
-    .hero-skype::before {
-        content: '';
-        width: 80px;
-        height: 80px;
-        border: 12px solid var(--accent-orange);
-        border-radius: 50%;
-        position: relative;
-        z-index: 2;
-    }
-
-    .hero-skype::after {
-        content: '';
-        width: 120px;
-        height: 12px;
-        background-color: var(--text-main);
-        border-radius: 6px;
-        position: absolute;
-        top: 60%;
-        transform: rotate(-45deg);
-        z-index: 1;
-    }
-</style>

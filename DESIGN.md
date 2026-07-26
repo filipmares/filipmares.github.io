@@ -195,7 +195,7 @@ Components feel precise and lightly tactile: thin strokes, compact geometry, dir
 - The homepage uses a visible index rather than a persistent global menu.
 - About and project routes use a compact back/index link at the upper left and the theme control at the upper right.
 - Link labels use medium-weight uppercase type with modest tracking; arrow movement provides directional feedback.
-- Project index rows pair a title with a tabular date, separated by hairline rules. Desktop hover may reveal a 320px by 240px preview; mobile stacks title and date without requiring hover.
+- Project index rows pair a title with a tabular date, separated by hairline rules. Desktop hover/focus may reveal a 320px by 240px factual preview panel; narrow screens surface the same project context inline in each row without relying on hover.
 
 ### San Francisco Location Signature
 
@@ -203,7 +203,7 @@ The location badge pairs an uppercase city label with a 16px Signal Orange line 
 
 ### Project Preview
 
-The preview canvas sits outside the 600px homepage index on wide screens, follows the active project row vertically, and uses opacity plus a short horizontal translation. It is supplementary: project names and dates remain complete without it. Keyboard focus must receive the same informational preview as pointer hover, and narrow screens need a non-hover equivalent.
+The preview canvas sits outside the 600px homepage index on wide screens, follows the active project row vertically, and uses opacity plus a short horizontal translation. It is supplementary: project names and dates remain complete without it. The panel contains factual project context (title, concise description, company/date context, and restrained tags) rather than decorative geometry. Keyboard focus must receive the same informational preview as pointer hover, and narrow screens expose a concise inline equivalent in each project row.
 
 ### Blueprint Mode
 

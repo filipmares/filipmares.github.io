@@ -11,15 +11,8 @@
     --border-color: #d8d8d6;
     --photo-placeholder: #d8d8d6;
 
-    /* Visual Canvas */
-    --canvas-bg-copilot: linear-gradient(135deg, #e4e4e1 0%, #d8d8d6 100%);
-    --canvas-fg-copilot: var(--bg-color);
-    --canvas-bg-powerapps: #e4e4e1;
-    --canvas-bg-lobe: #d8d8d6;
-
     /* Gallery */
     --gallery-bg: #eaeaea;
-    --gallery-ui-bg: #ffffff;
     --gallery-caption-bg: #fbfbfb;
     --focus-ring-color: #f45b26;
     --focus-ring-offset: 3px;
@@ -34,13 +27,7 @@
     --border-color: rgba(255, 255, 255, 0.1);
     --photo-placeholder: #222222;
 
-    --canvas-bg-copilot: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
-    --canvas-fg-copilot: #111;
-    --canvas-bg-powerapps: #1a1a1a;
-    --canvas-bg-lobe: #222;
-
     --gallery-bg: #1a1a1a;
-    --gallery-ui-bg: #222;
     --gallery-caption-bg: #0a0a0a;
 }
 
@@ -54,13 +41,7 @@
         --border-color: rgba(255, 255, 255, 0.1);
         --photo-placeholder: #222222;
 
-        --canvas-bg-copilot: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
-        --canvas-fg-copilot: #111;
-        --canvas-bg-powerapps: #1a1a1a;
-        --canvas-bg-lobe: #222;
-
         --gallery-bg: #1a1a1a;
-        --gallery-ui-bg: #222;
         --gallery-caption-bg: #0a0a0a;
     }
 }
@@ -248,9 +229,7 @@ body {
 
 /* --- Project Page Shared Styles --- */
 .project-navbar {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
 }
 
 .project-back-link {
@@ -264,17 +243,6 @@ body {
 .project-back-link:hover {
     transform: translateX(-4px);
     color: var(--text-main);
-}
-
-.hero-banner {
-    width: 100%;
-    height: 50vh;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
 }
 
 .project-container {
@@ -331,6 +299,7 @@ body {
 
 .content-body p {
     margin-bottom: 1.5rem;
+    text-wrap: pretty;
 }
 
 .content-body h2 {
@@ -338,75 +307,165 @@ body {
     font-weight: 600;
     margin-top: 3rem;
     margin-bottom: 1rem;
+    text-wrap: balance;
 }
 
-/* Gallery */
-.gallery {
+/* Case study content */
+.case-study-content {
+    max-width: 75ch;
+}
+
+.case-study-section + .case-study-section {
+    margin-top: 2.5rem;
+}
+
+.case-study-section ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.case-study-section li + li {
+    margin-top: 0.75rem;
+}
+
+.case-study-links {
+    list-style: none;
+    padding: 0;
+}
+
+.case-study-links a {
+    color: var(--text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--text-muted);
+}
+
+.case-study-links a:hover,
+.case-study-links a:focus-visible {
+    text-decoration-color: var(--accent-orange);
+}
+
+.case-study-artifacts {
     margin-top: 4rem;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem;
 }
 
-.gallery-item {
-    width: 100%;
-    background-color: var(--bg-color);
+.case-study-artifact {
+    margin: 0;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border-color);
-    transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
-.gallery-placeholder {
+.case-study-artifact.is-featured {
+    grid-column: span 2;
+}
+
+.case-study-artifact-frame {
+    background: var(--gallery-bg);
+}
+
+.case-study-artifact img {
+    display: block;
     width: 100%;
-    padding-bottom: 66%; /* 3:2 Aspect Ratio */
-    position: relative;
-    background-color: var(--gallery-bg);
-    transition: background-color 0.4s ease;
-    overflow: hidden;
+    height: auto;
+    background: var(--gallery-bg);
 }
 
-.gallery-placeholder .editorial-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-/* Abstract UI elements inside gallery */
-.ui-element {
-    position: absolute;
-    background: var(--gallery-ui-bg);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px color-mix(in srgb, var(--text-main) 10%, transparent);
-    transition: background-color 0.4s ease, border-color 0.4s ease;
-}
-
-.gallery-item:nth-child(1) .ui-element {
-    top: 20%; left: 10%; right: 10%; bottom: 20%;
-    border-top: 20px solid var(--text-main);
-}
-
-.gallery-item:nth-child(2) .ui-element {
-    top: 10%; left: 10%; width: 40%; height: 80%;
-}
-
-.gallery-item:nth-child(2) .ui-element::after {
-    content: '';
-    position: absolute;
-    top: 10%; left: 120%; width: 90%; height: 30%;
-    background: var(--gallery-ui-bg);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px color-mix(in srgb, var(--text-main) 10%, transparent);
-}
-
-.gallery-caption {
+.case-study-artifact figcaption {
     padding: 1rem;
     font-size: 0.85rem;
     color: var(--text-muted);
     border-top: 1px solid var(--border-color);
     background: var(--gallery-caption-bg);
-    transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.closing-contact {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    max-width: 75ch;
+}
+
+.closing-contact-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+}
+
+.closing-contact-copy {
+    margin-top: 0.75rem;
+    margin-bottom: 0.9rem;
+    color: var(--text-main);
+    text-wrap: pretty;
+}
+
+.closing-contact-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.closing-contact-link:hover,
+.closing-contact-link:focus-visible {
+    text-decoration-color: var(--accent-orange);
+}
+
+.project-chronology-nav {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.project-chronology-link {
+    min-height: 44px;
+    text-decoration: none;
+    color: var(--text-main);
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.project-chronology-link:hover,
+.project-chronology-link:focus-visible {
+    border-color: var(--accent-orange);
+    color: var(--text-main);
+}
+
+.project-chronology-link.older {
+    text-align: right;
+}
+
+.project-chronology-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.project-chronology-title {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 /* --- Blueprint Mode / Easter Egg --- */
@@ -434,18 +493,6 @@ body.blueprint-mode {
 
 body.blueprint-mode * {
     outline: 1px solid rgba(244, 91, 38, 0.4) !important;
-}
-
-body.blueprint-mode .hero-banner::before,
-body.blueprint-mode .hero-banner::after,
-body.blueprint-mode .ui-element,
-body.blueprint-mode .visual-copilot::before,
-body.blueprint-mode .visual-copilot::after,
-body.blueprint-mode .visual-powerapps::before,
-body.blueprint-mode .visual-powerapps::after,
-body.blueprint-mode .visual-lobe::before,
-body.blueprint-mode .visual-lobe::after {
-    outline: 2px solid var(--accent-orange) !important;
 }
 
 #blueprint-toast {
@@ -483,22 +530,14 @@ body.blueprint-mode .visual-lobe::after {
     .back-link,
     .project-back-link,
     .editorial-image,
-    .gallery-item,
-    .gallery-placeholder,
-    .gallery-caption,
+    .case-study-artifact,
+    .project-chronology-link,
     #blueprint-toast {
         transition: none;
     }
 
     #blueprint-toast {
         transform: none;
-    }
-}
-
-/* --- Responsive: Project Pages --- */
-@media (max-width: 800px) {
-    .hero-banner {
-        min-height: 300px;
     }
 }
 
@@ -515,11 +554,16 @@ body.blueprint-mode .visual-lobe::after {
         font-size: 2.25rem;
     }
 
-    .hero-banner {
-        min-height: 250px;
+    .case-study-artifacts,
+    .project-chronology-nav {
+        grid-template-columns: 1fr;
     }
 
-    .gallery {
-        grid-template-columns: 1fr;
+    .project-chronology-link.older {
+        text-align: left;
+    }
+
+    .closing-contact {
+        margin-top: 3rem;
     }
 }

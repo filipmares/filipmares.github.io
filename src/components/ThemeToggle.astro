@@ -173,8 +173,17 @@
         bindToggleButton(document.getElementById('theme-toggle') as HTMLButtonElement | null);
     };
 
+    const cleanupThemeToggleForSwap = () => {
+        if (controller.button && controller.buttonClickHandler) {
+            controller.button.removeEventListener('click', controller.buttonClickHandler);
+        }
+        controller.button = null;
+        controller.buttonClickHandler = null;
+    };
+
     if (!controller.lifecycleBound) {
         document.addEventListener('astro:page-load', initializeThemeToggle);
+        document.addEventListener('astro:before-swap', cleanupThemeToggleForSwap);
         controller.lifecycleBound = true;
     }
 

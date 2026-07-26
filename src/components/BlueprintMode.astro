@@ -6,13 +6,20 @@
  */
 ---
 
-<div id="blueprint-toast" transition:persist>Developer Mode Enabled</div>
+<div id="blueprint-toast" role="status" aria-live="polite" aria-atomic="true" transition:persist>Developer Mode Enabled</div>
 
 <script>
     const secretCode = 'grid';
     let inputBuffer = '';
 
+    const isTypingTarget = (target: EventTarget | null): boolean => {
+        if (!(target instanceof HTMLElement)) return false;
+        return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+    };
+
     document.addEventListener('keydown', (e) => {
+        if (isTypingTarget(e.target)) return;
+
         // Only listen to a-z keys to build the buffer
         if (e.key.match(/^[a-z]$/i)) {
             inputBuffer += e.key.toLowerCase();

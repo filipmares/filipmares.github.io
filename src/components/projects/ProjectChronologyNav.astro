@@ -1,0 +1,41 @@
+---
+interface ProjectSummary {
+    id: string;
+    data: {
+        title: string;
+    };
+}
+
+interface Props {
+    newerProject?: ProjectSummary;
+    olderProject?: ProjectSummary;
+}
+
+const { newerProject, olderProject } = Astro.props;
+---
+
+{(newerProject || olderProject) && (
+    <nav class="project-chronology-nav" aria-label="Project chronology">
+        {newerProject ? (
+            <a
+                class="project-chronology-link newer"
+                href={`/projects/${newerProject.id}`}
+                aria-label={`Go to newer project: ${newerProject.data.title}`}
+            >
+                <span class="project-chronology-label">Newer project</span>
+                <span class="project-chronology-title">{newerProject.data.title}</span>
+            </a>
+        ) : <span class="project-chronology-spacer" aria-hidden="true"></span>}
+
+        {olderProject && (
+            <a
+                class="project-chronology-link older"
+                href={`/projects/${olderProject.id}`}
+                aria-label={`Go to older project: ${olderProject.data.title}`}
+            >
+                <span class="project-chronology-label">Older project</span>
+                <span class="project-chronology-title">{olderProject.data.title}</span>
+            </a>
+        )}
+    </nav>
+)}

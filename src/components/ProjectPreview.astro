@@ -1,34 +1,46 @@
 ---
 /**
  * ProjectPreview.astro
- * Floating visual preview canvas for the home page.
- * Shows abstract CSS art when hovering over project list items (desktop only).
+ * Floating factual preview panel for the home page.
+ * Uses project metadata from index links (desktop only).
  */
 ---
 
 <div id="preview-canvas">
-    <div id="preview-content"></div>
+    <article id="preview-content" class="project-preview-panel">
+        <p id="preview-context" class="preview-context"></p>
+        <h3 id="preview-title" class="preview-title"></h3>
+        <p id="preview-description" class="preview-description"></p>
+        <p id="preview-tags" class="preview-tags"></p>
+    </article>
 </div>
 
 <style>
     #preview-canvas {
         position: absolute;
         left: 100%;
-        top: 50%;
-        transform: translateY(-50%) translateX(-10px);
+        top: 0;
         margin-left: 4rem;
         width: 320px;
         height: 240px;
         pointer-events: none;
         opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), top 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        --preview-x: -10px;
+        --preview-y: 0px;
+        transform: translate3d(var(--preview-x), var(--preview-y), 0);
+        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         z-index: 10;
+    }
+
+    #preview-canvas.is-visible {
+        opacity: 1;
+        --preview-x: 0px;
     }
 
     @media (prefers-reduced-motion: reduce) {
         #preview-canvas {
             transition: none;
-            transform: translateY(-50%);
+            --preview-x: 0px;
         }
     }
 
@@ -38,120 +50,136 @@
         }
     }
 
-    /* Visual: M365 Copilot */
-    :global(.visual-copilot) {
-        width: 100%; height: 100%;
-        background: var(--canvas-bg-copilot);
-        display: flex; align-items: center; justify-content: center;
-        view-transition-name: project-hero-copilot;
-        overflow: hidden;
-    }
-    :global(.visual-copilot)::before {
-        content: ''; width: 100px; height: 100px; border: 6px solid var(--text-main); border-radius: 20px;
-        background-color: var(--canvas-fg-copilot); position: relative; z-index: 2;
-    }
-    :global(.visual-copilot)::after {
-        content: ''; width: 50px; height: 50px; background-color: var(--accent-orange); border-radius: 50%;
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
-        margin-top: -30px; margin-left: 30px;
+    .project-preview-panel {
+        height: 100%;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-color);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
-    /* Visual: Power Apps */
-    :global(.visual-powerapps) {
-        width: 100%; height: 100%;
-        background: var(--canvas-bg-powerapps);
-        display: flex; align-items: center; justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    :global(.visual-powerapps)::before {
-        content: ''; width: 120px; height: 60px; background-color: var(--text-main); border-radius: 6px;
-    }
-    :global(.visual-powerapps)::after {
-        content: ''; width: 30px; height: 30px; background-color: var(--accent-orange);
-        position: absolute; bottom: 30%; right: 30%; border-radius: 4px;
+    .preview-context {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-muted);
     }
 
-    /* Visual: Lobe */
-    :global(.visual-lobe) {
-        width: 100%; height: 100%;
-        background: var(--canvas-bg-lobe);
-        display: flex; align-items: center; justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    :global(.visual-lobe)::before {
-        content: ''; width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent;
-        border-bottom: 80px solid var(--text-main); position: absolute;
-    }
-    :global(.visual-lobe)::after {
-        content: ''; width: 60px; height: 60px; border: 6px solid var(--accent-orange); border-radius: 50%;
-        position: absolute; top: 25%; left: 20%;
+    .preview-title {
+        font-size: 1.15rem;
+        font-weight: 500;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
     }
 
-    /* Visual: Skype */
-    :global(.visual-skype) {
-        width: 100%; height: 100%;
-        background: var(--canvas-bg-copilot);
-        display: flex; align-items: center; justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    :global(.visual-skype)::before {
-        content: ''; width: 80px; height: 80px; border: 12px solid var(--accent-orange); border-radius: 50%;
-        position: relative; z-index: 2;
-    }
-    :global(.visual-skype)::after {
-        content: ''; width: 120px; height: 12px; background-color: var(--text-main); border-radius: 6px;
-        position: absolute; top: 60%; transform: rotate(-45deg); z-index: 1;
+    .preview-description {
+        font-size: 0.95rem;
+        color: var(--text-main);
+        line-height: 1.5;
     }
 
-    :global(.preview-state) { display: none; }
-    :global(.preview-state.active) { display: block; }
+    .preview-tags {
+        margin-top: auto;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+    }
 </style>
 
 <script>
-    const projectLinks = document.querySelectorAll('.index-link[data-visual]');
-    const previewCanvas = document.getElementById('preview-canvas') as HTMLElement;
-    const previewContent = document.getElementById('preview-content') as HTMLElement;
-    const container = document.querySelector('.container') as HTMLElement;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    interface ProjectPreviewController {
+        cleanup: (() => void) | null;
+        lifecycleBound: boolean;
+    }
 
-    const showPreview = (target: HTMLElement) => {
-        const visualType = target.getAttribute('data-visual');
-        previewContent.className = `preview-state active visual-${visualType}`;
-
-        const linkRect = target.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2);
-
-        previewCanvas.style.top = `${relativeY}px`;
-        previewCanvas.style.opacity = '1';
-        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(0)';
+    const controllerKey = '__fmProjectPreviewController';
+    const existingController = (window as any)[controllerKey] as ProjectPreviewController | undefined;
+    const controller: ProjectPreviewController = existingController ?? {
+        cleanup: null,
+        lifecycleBound: false,
     };
+    (window as any)[controllerKey] = controller;
 
-    const hidePreview = () => {
-        previewCanvas.style.opacity = '0';
-        previewCanvas.style.transform = prefersReducedMotion ? 'translateY(-50%)' : 'translateY(-50%) translateX(-10px)';
+    const initializeProjectPreview = () => {
+        const projectLinks = Array.from(document.querySelectorAll<HTMLElement>('.index-link[data-preview-title]'));
+        const previewCanvas = document.getElementById('preview-canvas') as HTMLElement | null;
+        const previewContext = document.getElementById('preview-context') as HTMLElement | null;
+        const previewTitle = document.getElementById('preview-title') as HTMLElement | null;
+        const previewDescription = document.getElementById('preview-description') as HTMLElement | null;
+        const previewTags = document.getElementById('preview-tags') as HTMLElement | null;
+        const container = document.querySelector('.container') as HTMLElement | null;
 
-        if (prefersReducedMotion) {
-            previewContent.className = '';
-            return;
+        if (!projectLinks.length || !previewCanvas || !previewContext || !previewTitle || !previewDescription || !previewTags || !container) {
+            return () => {};
         }
 
-        setTimeout(() => {
-            if (previewCanvas.style.opacity === '0') {
-                previewContent.className = '';
-            }
-        }, 300);
+        const setPreviewContent = (target: HTMLElement) => {
+            previewContext.textContent = target.dataset.previewContext ?? '';
+            previewTitle.textContent = target.dataset.previewTitle ?? '';
+            previewDescription.textContent = target.dataset.previewDescription ?? '';
+            previewTags.textContent = target.dataset.previewTags ?? '';
+        };
+
+        const showPreview = (target: HTMLElement) => {
+            setPreviewContent(target);
+
+            const linkRect = target.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const relativeY = linkRect.top - containerRect.top + (linkRect.height / 2) - (previewCanvas.offsetHeight / 2);
+
+            previewCanvas.style.setProperty('--preview-y', `${relativeY}px`);
+            previewCanvas.classList.add('is-visible');
+        };
+
+        const hidePreview = () => {
+            previewCanvas.classList.remove('is-visible');
+        };
+
+        const listenerCleanup: Array<() => void> = [];
+
+        projectLinks.forEach((link) => {
+            const handleMouseEnter = (event: Event) => showPreview(event.currentTarget as HTMLElement);
+            const handleFocus = (event: Event) => showPreview(event.currentTarget as HTMLElement);
+            const handleMouseLeave = () => hidePreview();
+            const handleBlur = () => hidePreview();
+
+            link.addEventListener('mouseenter', handleMouseEnter);
+            link.addEventListener('focus', handleFocus);
+            link.addEventListener('mouseleave', handleMouseLeave);
+            link.addEventListener('blur', handleBlur);
+
+            listenerCleanup.push(() => {
+                link.removeEventListener('mouseenter', handleMouseEnter);
+                link.removeEventListener('focus', handleFocus);
+                link.removeEventListener('mouseleave', handleMouseLeave);
+                link.removeEventListener('blur', handleBlur);
+            });
+        });
+
+        return () => {
+            hidePreview();
+            listenerCleanup.forEach((dispose) => dispose());
+        };
     };
 
-    if (projectLinks.length && previewCanvas && previewContent && container) {
-        projectLinks.forEach(link => {
-            link.addEventListener('mouseenter', (e) => showPreview(e.currentTarget as HTMLElement));
-            link.addEventListener('focus', (e) => showPreview(e.currentTarget as HTMLElement));
-            link.addEventListener('mouseleave', hidePreview);
-            link.addEventListener('blur', hidePreview);
+    const runProjectPreviewSetup = () => {
+        controller.cleanup?.();
+        controller.cleanup = initializeProjectPreview();
+    };
+
+    if (!controller.lifecycleBound) {
+        document.addEventListener('astro:page-load', runProjectPreviewSetup);
+        document.addEventListener('astro:before-swap', () => {
+            controller.cleanup?.();
+            controller.cleanup = null;
         });
+        controller.lifecycleBound = true;
     }
+
+    runProjectPreviewSetup();
 </script>

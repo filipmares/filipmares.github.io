@@ -1,7 +1,19 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import ProjectPreview from '../components/ProjectPreview.astro';
+
+const projects = (await getCollection('projects'))
+    .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+    .map((project) => ({
+        id: project.id,
+        title: project.data.title,
+        dateMeta: project.data.dateMeta,
+        description: project.data.description,
+        context: `${project.data.company} · ${project.data.dateMeta}`,
+        tags: project.data.tags.slice(0, 3),
+    }));
 ---
 
 <BaseLayout
@@ -28,13 +40,14 @@ import ProjectPreview from '../components/ProjectPreview.astro';
             </div>
             <p class="bio">Principal Software Engineer at Microsoft. Building App Builder in M365 Copilot. Previously led UX across Power Apps AI Agents, App Copilot, Cards, and Lobe (Machine Learning Made Easy). Formerly a founding engineer at Talko and Pulse.</p>
 
-            <nav class="social-links" aria-label="Social links">
+            <nav class="social-links" aria-label="Professional actions">
                 <a href="/about" class="about-link" style="view-transition-name: about-link;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     About
                 </a>
-                <a href="https://www.linkedin.com/in/filipmares/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/filipmares/" class="social-link linkedin-link" target="_blank" rel="noopener noreferrer">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    LinkedIn
                 </a>
             </nav>
         </header>
@@ -43,30 +56,28 @@ import ProjectPreview from '../components/ProjectPreview.astro';
             <section>
                 <h2 class="section-label">Selected Projects</h2>
                 <ul class="index-list">
-                    <li>
-                        <a href="/projects/copilot" class="index-link" data-visual="copilot" style="view-transition-name: project-title-copilot;">
-                            <span class="index-title">App Builder in M365 Copilot</span>
-                            <span class="index-meta">Sep 2025 —</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/projects/powerapps" class="index-link" data-visual="powerapps" style="view-transition-name: project-title-powerapps;">
-                            <span class="index-title">Power Apps Copilot & Collaboration</span>
-                            <span class="index-meta">2021 — 2025</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/projects/lobe" class="index-link" data-visual="lobe" style="view-transition-name: project-title-lobe;">
-                            <span class="index-title">Lobe</span>
-                            <span class="index-meta">2019 — 2021</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/projects/skype" class="index-link" data-visual="skype" style="view-transition-name: project-title-skype;">
-                            <span class="index-title">Skype Calling UI & ReactXP</span>
-                            <span class="index-meta">2016 — 2019</span>
-                        </a>
-                    </li>
+                    {projects.map((project) => (
+                        <li>
+                            <a
+                                href={`/projects/${project.id}`}
+                                class="index-link"
+                                data-preview-context={project.context}
+                                data-preview-title={project.title}
+                                data-preview-description={project.description}
+                                data-preview-tags={project.tags.join(' · ')}
+                                aria-describedby={`project-inline-${project.id}`}
+                                style={`view-transition-name: project-title-${project.id};`}
+                            >
+                                <span class="index-title">{project.title}</span>
+                                <span class="index-meta">{project.dateMeta}</span>
+                            </a>
+                            <div class="index-inline-preview" id={`project-inline-${project.id}`}>
+                                <p class="index-inline-context">{project.context}</p>
+                                <p class="index-inline-description">{project.description}</p>
+                                <p class="index-inline-tags">{project.tags.join(' · ')}</p>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </section>
 
@@ -131,6 +142,7 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         margin-bottom: 0;
         display: inline-flex;
         align-items: center;
+        text-wrap: balance;
     }
 
     /* Location Badge */
@@ -192,7 +204,8 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         font-size: 1.15rem;
         color: var(--text-muted);
         margin-bottom: 2rem;
-        max-width: 90%;
+        max-width: 72ch;
+        text-wrap: pretty;
     }
 
     .bio a {
@@ -213,41 +226,51 @@ import ProjectPreview from '../components/ProjectPreview.astro';
     .social-links {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1rem;
         margin-bottom: 4rem;
+        flex-wrap: wrap;
     }
 
     .social-link {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         color: var(--text-main);
         text-decoration: none;
         transition: color 0.2s ease;
-        min-width: 44px;
         min-height: 44px;
-        justify-content: center;
+        line-height: 1;
+    }
+
+    .linkedin-link {
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        gap: 0.5rem;
     }
 
     .social-link :global(svg) {
-        width: 20px;
-        height: 20px;
-        transition: transform 0.2s ease, filter 0.2s ease;
+        width: 18px;
+        height: 18px;
+        transition: transform 0.2s ease, filter 0.2s ease, color 0.2s ease;
     }
 
     .social-link:hover {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:focus-visible {
-        color: var(--accent-orange);
+        color: var(--text-main);
     }
 
     .social-link:hover :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
 
     .social-link:focus-visible :global(svg) {
+        color: var(--accent-orange);
         transform: translateY(-2px);
         filter: drop-shadow(0 4px 6px rgba(244, 91, 38, 0.2));
     }
@@ -336,6 +359,30 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         position: relative;
     }
 
+    .index-inline-preview {
+        display: none;
+        padding: 0 0 1rem;
+    }
+
+    .index-inline-context,
+    .index-inline-tags {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .index-inline-description {
+        margin-top: 0.4rem;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        line-height: 1.5;
+    }
+
+    .index-inline-tags {
+        margin-top: 0.5rem;
+    }
+
     /* Subtle orange bar indicator on hover */
     .index-link::before {
         content: '';
@@ -403,6 +450,17 @@ import ProjectPreview from '../components/ProjectPreview.astro';
         color: var(--text-main);
     }
 
+    @media (max-width: 1000px) {
+        .index-inline-preview {
+            display: block;
+        }
+
+        a.index-link:hover,
+        a.index-link:focus-visible {
+            transform: none;
+        }
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
         :global(body) {
@@ -431,6 +489,14 @@ import ProjectPreview from '../components/ProjectPreview.astro';
             padding: 1rem 0;
         }
 
+        .index-inline-preview {
+            padding-bottom: 0.85rem;
+        }
+
+        .index-inline-description {
+            font-size: 0.9rem;
+        }
+
         .index-meta {
             text-align: left;
             font-size: 0.8rem;
@@ -448,34 +514,44 @@ import ProjectPreview from '../components/ProjectPreview.astro';
 </style>
 
 <script>
-    // Random SF Icon Injector
+    interface SfIconLifecycleController {
+        cleanup: (() => void) | null;
+        lifecycleBound: boolean;
+    }
+
+    const sfIconControllerKey = '__fmSfIconLifecycleController';
+    const existingSfController = (window as any)[sfIconControllerKey] as SfIconLifecycleController | undefined;
+    const sfController: SfIconLifecycleController = existingSfController ?? {
+        cleanup: null,
+        lifecycleBound: false,
+    };
+    (window as any)[sfIconControllerKey] = sfController;
+
     const sfIcons = [
-        // Sutro Tower
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14"></path><path d="M6 2l3 20"></path><path d="M18 2l-3 20"></path><path d="M7 8h10"></path><path d="M8 15h8"></path><path d="M12 2v20"></path><path d="M6 2l6 6"></path><path d="M18 2l-6 6"></path></svg>`,
-        // Transamerica Pyramid
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L6 22h12L12 2z"></path><path d="M12 2v20"></path><path d="M9.5 12h5"></path><path d="M8 17h8"></path></svg>`,
-        // Golden Gate Bridge
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V6M18 22V6"></path><path d="M2 14c3-4 6-6 10-6s7 2 10 6"></path><path d="M6 10v4M18 10v4"></path><path d="M2 14h20"></path></svg>`,
-        // Cable Car
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"></rect><path d="M4 12h16"></path><path d="M8 6v6"></path><path d="M16 6v6"></path><circle cx="8" cy="18" r="2"></circle><circle cx="16" cy="18" r="2"></circle><path d="M12 2v4"></path></svg>`,
-        // Fog over water
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19h8"></path><path d="M5 15h14"></path><path d="M6 11h11a3 3 0 0 0-3-3 4 4 0 0 0-7 2 2 2 0 0 0-1 3z"></path></svg>`
     ];
 
-    const iconContainer = document.getElementById('sf-icon-container');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const initializeSfIcons = () => {
+        const iconContainer = document.getElementById('sf-icon-container');
+        if (!iconContainer) return () => {};
 
-    if (iconContainer) {
-        // Inject all icons but keep them hidden
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         iconContainer.innerHTML = sfIcons.join('');
-        const svgElements = iconContainer.querySelectorAll('svg');
+        const svgElements = Array.from(iconContainer.querySelectorAll<SVGElement>('svg'));
+        if (!svgElements.length) return () => {};
 
         let currentIconIndex = Math.floor(Math.random() * sfIcons.length);
         svgElements[currentIconIndex].classList.add('active');
 
+        let intervalId: number | null = null;
+        const timeoutIds: number[] = [];
+
         if (!prefersReducedMotion) {
-            // Cycle through icons every 3 seconds
-            setInterval(() => {
+            intervalId = window.setInterval(() => {
                 const oldIndex = currentIconIndex;
                 currentIconIndex = (currentIconIndex + 1) % sfIcons.length;
 
@@ -484,14 +560,38 @@ import ProjectPreview from '../components/ProjectPreview.astro';
 
                 oldSvg.classList.remove('active');
                 oldSvg.classList.add('leaving');
-
                 newSvg.classList.add('active');
 
-                // Clean up leaving class after animation completes
-                setTimeout(() => {
+                const timeoutId = window.setTimeout(() => {
                     oldSvg.classList.remove('leaving');
                 }, 500);
+                timeoutIds.push(timeoutId);
             }, 3000);
         }
+
+        return () => {
+            if (intervalId !== null) {
+                window.clearInterval(intervalId);
+                intervalId = null;
+            }
+            timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
+            iconContainer.innerHTML = '';
+        };
+    };
+
+    const runSfIconSetup = () => {
+        sfController.cleanup?.();
+        sfController.cleanup = initializeSfIcons();
+    };
+
+    if (!sfController.lifecycleBound) {
+        document.addEventListener('astro:page-load', runSfIconSetup);
+        document.addEventListener('astro:before-swap', () => {
+            sfController.cleanup?.();
+            sfController.cleanup = null;
+        });
+        sfController.lifecycleBound = true;
     }
+
+    runSfIconSetup();
 </script>

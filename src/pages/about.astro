@@ -56,6 +56,12 @@ import ThemeToggle from '../components/ThemeToggle.astro';
                 </div>
             </div>
         </div>
+
+        <section class="closing-contact" aria-labelledby="about-contact-label">
+            <p id="about-contact-label" class="closing-contact-label">Professional contact</p>
+            <p class="closing-contact-copy">For professional conversations, connect with me on LinkedIn.</p>
+            <a href="https://www.linkedin.com/in/filipmares/" class="closing-contact-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </section>
     </main>
 </BaseLayout>
 
@@ -74,6 +80,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
         display: inline-flex;
         align-items: center;
         view-transition-name: about-link;
+        text-wrap: balance;
     }
 
     /* Editorial Split Layout */
@@ -130,10 +137,12 @@ import ThemeToggle from '../components/ThemeToggle.astro';
     .bio-content {
         font-size: 1.15rem;
         color: var(--text-main);
+        max-width: 72ch;
     }
 
     .bio-content p {
         margin-bottom: 1.5rem;
+        text-wrap: pretty;
     }
 
     .bio-meta {

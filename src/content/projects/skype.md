@@ -7,19 +7,21 @@ dateRange: "2016-2019"
 dateMeta: "2016 — 2019"
 tags: ["React Native", "WebRTC", "Cross-Platform", "Design Systems"]
 sortOrder: 4
-heroClass: "hero-skype"
-heroBackground: "var(--canvas-bg-copilot)"
-galleryCaptions:
-  - "Active calling surface and participant grid."
-  - "Cross-platform component architecture."
+caseStudy:
+  context: "After Microsoft acquired Talko, I worked on redesigning and re-architecting the Skype calling experience for audio and video communication across desktop and mobile."
+  role: "I led development for the Skype calling UI across desktop and mobile, shipped key features, increased unit-test coverage, and onboarded engineers."
+  collaborationScope: "I worked within a broader Skype client organization that was aligning web, iOS, and Android experiences on shared engineering foundations."
+  constraints:
+    - "Calling interfaces had to stay high-performance and real-time while handling live audio/video sessions."
+    - "Feature parity across web, iOS, and Android required shared architecture without sacrificing platform quality."
+    - "The migration had to improve accessibility and maintainability while supporting ongoing feature delivery."
+  decisions:
+    - "Our team built shared components with ReactXP (a Skype-built cross-platform framework for web, iOS, and Android) to unify calling UI behavior."
+    - "We reinforced the migration with shared component libraries and build tooling so multiple clients could ship from one architecture."
+    - "I balanced feature delivery with test coverage growth and onboarding to keep execution stable as the architecture evolved."
+  outcomes:
+    - "The ReactXP migration onboarded the Skype client organization onto a single performant, accessible codebase."
+    - "Calling UI features shipped across desktop and mobile on shared foundations."
+    - "Unit-test coverage increased during active feature development."
+  reflection: "This work sharpened my approach to cross-platform engineering: shared code is valuable only when performance and native-feeling interaction remain intact. I continue to prioritize architecture choices that reduce fragmentation without flattening product quality."
 ---
-
-Following the acquisition of Talko, I worked on redesigning and re-architecting the Skype Calling UI.
-
-Our team heavily utilized ReactXP (a cross-platform framework created at Skype) to build components that could be shared across the web, iOS, and Android applications, ensuring feature parity and a unified design language. The ReactXP migration onboarded the entire Skype client org onto a single performant, accessible codebase, supported by shared component libraries and build tooling.
-
-I led development for the Skype calling UI across desktop and mobile — shipping key features, increasing unit-test coverage, and onboarding engineers.
-
-## Focus
-
-Building high-performance, real-time UI components for audio and video calling that felt perfectly native on every device while sharing a single codebase.

@@ -13,6 +13,7 @@ colors:
   caption-white: "#fbfbfb"
   dark-muted: "#888888"
   dark-surface: "#222222"
+  dark-gallery: "#1a1a1a"
   dark-deep: "#0a0a0a"
 typography:
   display:
@@ -42,6 +43,32 @@ typography:
     fontWeight: 400
     lineHeight: 1.6
     letterSpacing: "0.15em"
+  navigation:
+    fontSize: "0.95rem"
+    fontWeight: 500
+    letterSpacing: "0.05em"
+  compact-context:
+    fontSize: "0.75rem"
+    fontWeight: 400
+    letterSpacing: "0.08em"
+  compact-tag:
+    fontSize: "0.8rem"
+    fontWeight: 400
+  image-caption:
+    fontSize: "0.9rem"
+    fontWeight: 400
+  mobile-body:
+    fontSize: "1rem"
+    fontWeight: 400
+  mobile-headline:
+    fontSize: "2rem"
+    fontWeight: 500
+  mobile-display:
+    fontSize: "2.25rem"
+    fontWeight: 600
+  section-heading:
+    fontSize: "1.5rem"
+    fontWeight: 500
 rounded:
   control: "4px"
   object: "6px"
@@ -64,11 +91,11 @@ components:
     backgroundColor: "transparent"
     textColor: "{colors.instrument-black}"
     rounded: "{rounded.full}"
-    size: "32px"
+    size: "44px"
   project-back-link:
     backgroundColor: "{colors.instrument-white}"
     textColor: "{colors.instrument-black}"
-    typography: "{typography.label}"
+    typography: "{typography.navigation}"
     rounded: "{rounded.control}"
     padding: "8px 16px"
   index-row:
@@ -80,7 +107,7 @@ components:
   project-tag:
     backgroundColor: "transparent"
     textColor: "{colors.graphite}"
-    typography: "{typography.label}"
+    typography: "{typography.compact-tag}"
     rounded: "{rounded.control}"
     padding: "4px 12px"
   gallery-container:
@@ -91,7 +118,7 @@ components:
 
 # Design System: Filip Mares Portfolio
 
-## 1. Overview
+## Overview
 
 **Creative North Star: "The Personal Instrument Index"**
 
@@ -113,7 +140,7 @@ The system explicitly rejects superficial retro-Braun imitation, ornamental indu
 
 **The Quiet-at-Rest Rule.** Pages remain visually still and legible by default. Motion responds to navigation, interaction, location, or discovery; reduced-motion users receive an equivalent static state.
 
-## 2. Colors
+## Colors
 
 The palette resembles a precision instrument housing: soft neutral shells, high-contrast markings, restrained dividers, and a single orange operational signal.
 
@@ -130,14 +157,15 @@ The palette resembles a precision instrument housing: soft neutral shells, high-
 - **Clean White:** Light gallery UI surface.
 - **Caption White:** Light caption rail.
 - **Dark Muted:** Secondary text in dark mode.
-- **Dark Surface:** Dark-theme object and gallery surface.
+- **Dark Surface:** Dark-theme object and placeholder surface.
+- **Dark Gallery:** Dark-theme gallery field.
 - **Dark Deep:** Dark-theme caption rail and deepest tonal layer.
 
 **The One Signal Rule.** Signal Orange occupies less than 10% of a page and marks action, state, location, or a deliberate signature. Never use it as general body text on Instrument White.
 
 **The Two-Housing Rule.** Light and dark themes are equal instrument housings, not separate brands. Preserve role parity when adding a token: canvas maps to canvas, ink to ink, muted to muted.
 
-## 3. Typography
+## Typography
 
 **Display Font:** Native system sans-serif stack
 **Body Font:** Native system sans-serif stack
@@ -152,11 +180,23 @@ The palette resembles a precision instrument housing: soft neutral shells, high-
 - **Body** (400, 1.15rem, 1.6): Biography and case-study prose; keep readable text within roughly 65–75 characters.
 - **Label** (400, 0.85rem, 0.15em, uppercase): Dates, company context, section labels, and compact metadata. Use only where the text is genuinely navigational or classificatory.
 
+### Supporting and responsive roles
+
+Navigation uses the compact medium-weight navigation role. Preview context uses compact context; tags and mobile dates use compact tag. Captions and mobile preview descriptions use image caption. The homepage body and headline step down to their mobile roles at 600px; project-page display titles use mobile display. Case-study subheadings use section heading. These roles record existing styles rather than introducing a new type scale.
+
 **The One Family Rule.** Do not add a display serif, geometric companion, or decorative mono to manufacture character. The native stack is an intentional expression of immediacy and restraint.
 
 **The Label Rationing Rule.** Uppercase tracking is reserved for compact metadata and true index labels. Never place an eyebrow above every heading.
 
-## 4. Elevation
+## Layout
+
+The homepage uses a centered 600px index. Secondary pages use wider reading containers: about content reaches 900px and project content 800px, while case-study prose is constrained to 75ch and about prose to 72ch. Hairline rules group project and experience entries without cards.
+
+At 1000px and below, the floating project preview is replaced by inline project context. At 800px, the about layout stacks. At 600px, project titles and dates stack, page padding contracts, and typography uses the recorded mobile roles. Project rows use 20px vertical padding on desktop and 16px on mobile, with at least a 44px interactive height.
+
+**The Stable Index Rule.** Titles align with the index edge at rest, with no reserved indicator gutter. Hover and keyboard focus reveal a stationary 3px orange caret and translate only the project title 8px; dates do not move.
+
+## Elevation & Depth
 
 The system is flat by default. Depth comes primarily from tonal contrast, one-pixel rules, overlap, and spatial separation. Shadows are ambient and low-opacity; they clarify a floating control, gallery object, or interaction response rather than decorating every container.
 
@@ -170,7 +210,11 @@ The system is flat by default. Depth comes primarily from tonal contrast, one-pi
 
 **The Ambient Shadow Rule.** Shadows remain broad, quiet, and below 10% black opacity at rest. Hard shadows and stacked card elevation are prohibited.
 
-## 5. Components
+## Shapes
+
+Index rows remain square and unboxed. Compact controls and tags use 4px corners; gallery and preview frames use 8px corners. The theme toggle is circular. Use one-pixel structural borders and the existing rounded scale rather than adding new container silhouettes.
+
+## Components
 
 Components feel precise and lightly tactile: thin strokes, compact geometry, direct labels, and short state transitions.
 
@@ -178,7 +222,7 @@ Components feel precise and lightly tactile: thin strokes, compact geometry, dir
 - **Shape:** Circular icon controls use a full radius; compact labeled controls use a restrained 4px radius.
 - **Primary:** There is no filled marketing button. Primary movement is expressed through clear text links and index rows.
 - **Hover / Focus:** Ink may shift to Signal Orange, icons may translate or scale slightly, and keyboard focus must be as visible as hover.
-- **Theme Toggle:** A persistent 32px circular icon control that switches sun/moon symbols and plays its mechanical click only after direct user activation. Preserve the sound as a signature; announce the resulting theme state.
+- **Theme Toggle:** A persistent 44px circular icon control that switches sun/moon symbols and plays its mechanical click only after direct user activation. Preserve the sound as a signature; announce the resulting theme state.
 
 ### Chips
 - **Style:** Transparent project tags use a one-pixel Graphite border, Graphite text, 4px radius, and compact 4px by 12px padding.
@@ -196,6 +240,7 @@ Components feel precise and lightly tactile: thin strokes, compact geometry, dir
 - About and project routes use a compact back/index link at the upper left and the theme control at the upper right.
 - Link labels use medium-weight uppercase type with modest tracking; arrow movement provides directional feedback.
 - Project index rows pair a title with a tabular date, separated by hairline rules. Desktop hover/focus may reveal a 320px by 240px factual preview panel; narrow screens surface the same project context inline in each row without relying on hover.
+- The project-row caret scales into view over 200ms while only its title translates 8px over the same duration. No space is reserved at rest. Keyboard focus receives the same response; reduced-motion preferences remove the transition, not the interaction state.
 
 ### San Francisco Location Signature
 
@@ -209,7 +254,7 @@ The preview canvas sits outside the 600px homepage index on wide screens, follow
 
 Typing `grid` toggles a hidden 20px technical grid, orange outlines, and a compact developer-mode toast. Preserve it as an easter egg for curious visitors. It must never interfere with typing in future form fields, replace normal focus outlines, or become necessary for navigation.
 
-## 6. Do's and Don'ts
+## Do's and Don'ts
 
 ### Do:
 - **Do** let structure, proportion, typography, and authentic project evidence carry the identity.

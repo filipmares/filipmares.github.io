@@ -355,7 +355,6 @@ const projects = (await getCollection('projects'))
         min-height: 44px;
         text-decoration: none;
         color: var(--text-main);
-        transition: transform 0.3s ease;
         position: relative;
     }
 
@@ -383,43 +382,34 @@ const projects = (await getCollection('projects'))
         margin-top: 0.5rem;
     }
 
-    /* Subtle orange bar indicator on hover */
     .index-link::before {
         content: '';
         position: absolute;
         left: 0;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%) scaleY(0);
         width: 3px;
         height: 50%;
         background-color: var(--accent-orange);
         transform-origin: center;
         transition: transform 0.2s ease;
-        transform: translateY(-50%) scaleY(0);
     }
 
-    a.index-link:hover::before {
-        transform: translateY(-50%) scaleY(1);
-    }
-
+    a.index-link:hover::before,
     a.index-link:focus-visible::before {
         transform: translateY(-50%) scaleY(1);
     }
 
-    a.index-link:hover {
-        transform: translateX(1.25rem);
-        color: var(--text-main);
-    }
-
-    a.index-link:focus-visible {
-        transform: translateX(1.25rem);
-        color: var(--text-main);
+    a.index-link:hover .index-title,
+    a.index-link:focus-visible .index-title {
+        transform: translateX(0.5rem);
     }
 
     .index-title {
         font-size: 1.25rem;
         font-weight: 500;
         letter-spacing: -0.01em;
+        transition: transform 0.2s ease;
     }
 
     .index-meta {
@@ -453,11 +443,6 @@ const projects = (await getCollection('projects'))
     @media (max-width: 1000px) {
         .index-inline-preview {
             display: block;
-        }
-
-        a.index-link:hover,
-        a.index-link:focus-visible {
-            transform: none;
         }
     }
 
@@ -502,13 +487,16 @@ const projects = (await getCollection('projects'))
             font-size: 0.8rem;
         }
 
-        a.index-link:hover {
-            transform: none;
-        }
-
         .social-links {
             gap: 1rem;
             flex-wrap: wrap;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .index-link::before,
+        .index-title {
+            transition: none;
         }
     }
 </style>

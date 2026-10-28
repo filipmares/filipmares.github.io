@@ -18,7 +18,7 @@ const projects = (await getCollection('projects'))
 
 <BaseLayout
     title="Filip Mares - Software Engineer"
-    description="Principal Software Engineer at Microsoft. Focused on human-computer interaction, artificial intelligence, and low-code platforms."
+    description="Forward Deployed Engineer at Microsoft Frontier Company, turning AI into real-world outcomes for Energy customers."
     ogUrl="https://filipmares.com"
 >
     <!-- Home page: theme toggle is absolutely positioned (top-right) -->
@@ -38,7 +38,7 @@ const projects = (await getCollection('projects'))
                     San Francisco, CA
                 </div>
             </div>
-            <p class="bio">Principal Software Engineer at Microsoft. Building App Builder in M365 Copilot. Previously led UX across Power Apps AI Agents, App Copilot, Cards, and Lobe (Machine Learning Made Easy). Formerly a founding engineer at Talko and Pulse.</p>
+            <p class="bio">Forward Deployed Engineer at Microsoft Frontier Company, turning AI into real-world outcomes for Energy customers. Previously built App Builder in M365 Copilot and led UX across Power Apps AI Agents, App Copilot, Cards, and Lobe (Machine Learning Made Easy). Formerly a founding engineer at Talko and Pulse.</p>
 
             <nav class="social-links" aria-label="Professional actions">
                 <a href="/about" class="about-link" style="view-transition-name: about-link;">
@@ -89,18 +89,21 @@ const projects = (await getCollection('projects'))
                             <span class="index-title">Microsoft</span>
                             <span class="index-meta">Jan 2016 — Present</span>
                         </div>
+                        <p class="index-inline-context experience-role">Principal Software Engineer</p>
                     </li>
                     <li>
                         <div class="index-link" style="cursor: default;">
                             <span class="index-title">Talko</span>
                             <span class="index-meta">Apr 2013 — Jan 2016</span>
                         </div>
+                        <p class="index-inline-context experience-role">Founding Engineer · Web Product Engineering Lead</p>
                     </li>
                     <li>
                         <div class="index-link" style="cursor: default;">
                             <span class="index-title">Pulse</span>
                             <span class="index-meta">Feb 2011 — Mar 2013</span>
                         </div>
+                        <p class="index-inline-context experience-role">Founding Engineer · Web Product Engineering Lead</p>
                     </li>
                 </ul>
             </section>
@@ -358,6 +361,11 @@ const projects = (await getCollection('projects'))
         position: relative;
     }
 
+    .experience-role {
+        margin-top: -0.75rem;
+        padding-bottom: 1.25rem;
+    }
+
     .index-inline-preview {
         display: none;
         padding: 0 0 1rem;
@@ -472,6 +480,11 @@ const projects = (await getCollection('projects'))
             align-items: flex-start;
             gap: 0.25rem;
             padding: 1rem 0;
+        }
+
+        .experience-role {
+            margin-top: -0.5rem;
+            padding-bottom: 1rem;
         }
 
         .index-inline-preview {

@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
 
     return rss({
         title: 'Filip Mares - Software Engineer',
-        description: 'Principal Software Engineer at Microsoft. Focused on human-computer interaction, artificial intelligence, and low-code platforms.',
+        description: 'Forward Deployed Engineer at Microsoft Frontier Company, turning AI into real-world outcomes for Energy customers.',
         site: context.site!.toString(),
         items: projects.map((project) => ({
             title: project.data.title,

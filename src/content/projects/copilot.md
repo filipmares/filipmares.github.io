@@ -1,10 +1,10 @@
 ---
 title: "App Builder in M365 Copilot"
-description: "Building App Builder in M365 Copilot: secure, governable, and sharable productivity apps for people and teams."
+description: "Built App Builder in M365 Copilot: secure, governable, and sharable productivity apps for people and teams."
 company: "Microsoft"
-companyLabel: "Microsoft — Sep 2025 to Present · San Francisco, CA · Hybrid"
-dateRange: "2025-present"
-dateMeta: "Sep 2025 —"
+companyLabel: "Microsoft — Aug 2025 to Sep 2026 · San Francisco, CA · Hybrid"
+dateRange: "2025-2026"
+dateMeta: "Aug 2025 — Sep 2026"
 tags: ["React", "TypeScript", "Bun", "LLM"]
 sortOrder: 1
 caseStudy:
@@ -23,6 +23,6 @@ caseStudy:
     - "Shipped live app preview and playback for the Microsoft Ignite 2025 launch."
     - "Moved upgradeability from a local implementation concern to a cross-team architectural direction."
     - "Validated end-to-end prototype evals for the service-hosted runtime with results comparable to the production agent baseline."
-  reflection: "This work reinforced a consistent pattern in AI product engineering: the user-facing experience only feels magical when lifecycle integrity, security policy boundaries, and evaluation loops are explicit. My current focus is continuing to improve enterprise reliability while advancing the runtime direction for future app-generation workflows."
+  reflection: "This work reinforced a consistent pattern in AI product engineering: the user-facing experience only feels magical when lifecycle integrity, security policy boundaries, and evaluation loops are explicit."
   links: []
 ---

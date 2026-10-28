@@ -101,7 +101,7 @@ export async function GET(_context: APIContext) {
                                         lineHeight: '1.4',
                                         maxWidth: '800px',
                                     },
-                                    children: 'Principal Software Engineer at Microsoft. Building App Builder in M365 Copilot.',
+                                    children: 'Forward Deployed Engineer at Microsoft Frontier Company. AI outcomes for Energy customers.',
                                 },
                             },
                         ],

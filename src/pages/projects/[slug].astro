@@ -18,6 +18,7 @@ const { title, description, companyLabel, tags, caseStudy } = project.data;
 if (!caseStudy) {
     throw new Error(`Project "${project.id}" is missing required caseStudy data.`);
 }
+const heroVideo = caseStudy.artifacts?.find((artifact) => artifact.kind === 'video');
 const slug = project.id;
 const allProjects = await getCollection('projects');
 const sortedProjects = [...allProjects].sort((a, b) => a.data.sortOrder - b.data.sortOrder);
@@ -47,6 +48,23 @@ const olderProject = currentProjectIndex >= 0 && currentProjectIndex < sortedPro
 
     <div class="project-container">
         <header class="project-header">
+            {heroVideo && (
+                <figure class="case-study-video-hero">
+                    <video
+                        aria-label={heroVideo.alt}
+                        controls
+                        preload="metadata"
+                        playsinline
+                        poster={heroVideo.poster}
+                        width={heroVideo.width}
+                        height={heroVideo.height}
+                    >
+                        <source src={heroVideo.src} type="video/mp4" />
+                        Your browser does not support video playback.
+                    </video>
+                    <figcaption>{heroVideo.caption}</figcaption>
+                </figure>
+            )}
             <span class="company-label">{companyLabel}</span>
             <h1 class="project-title" style={`view-transition-name: project-title-${slug};`}>{title}</h1>
             <div class="tags">

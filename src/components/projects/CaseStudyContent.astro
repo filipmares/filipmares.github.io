@@ -11,7 +11,8 @@ interface CaseStudyArtifact {
     width?: number;
     height?: number;
     aspectRatio?: string;
-    kind?: 'screenshot' | 'diagram' | 'document' | 'photo' | 'other';
+    kind?: 'screenshot' | 'diagram' | 'document' | 'photo' | 'video' | 'other';
+    poster?: string;
     layout?: 'standard' | 'featured';
 }
 
@@ -40,6 +41,8 @@ const decisions = caseStudy.decisions ?? [];
 const outcomes = caseStudy.outcomes ?? [];
 const links = caseStudy.links ?? [];
 const artifacts = caseStudy.artifacts ?? [];
+const heroVideo = artifacts.find((artifact) => artifact.kind === 'video');
+const supportingArtifacts = artifacts.filter((artifact) => artifact !== heroVideo);
 ---
 
 <main class="content-body case-study-content" id="main-content" tabindex="-1">
@@ -101,20 +104,34 @@ const artifacts = caseStudy.artifacts ?? [];
         </section>
     )}
 
-    {artifacts.length > 0 && (
+    {supportingArtifacts.length > 0 && (
         <section class="case-study-artifacts" aria-label="Project artifacts">
-            {artifacts.map((artifact) => (
+            {supportingArtifacts.map((artifact) => (
                 <figure class:list={['case-study-artifact', artifact.layout === 'featured' && 'is-featured']}>
                     <div class="case-study-artifact-frame">
-                        <img
-                            src={artifact.src}
-                            alt={artifact.alt}
-                            width={artifact.width}
-                            height={artifact.height}
-                            loading="lazy"
-                            decoding="async"
-                            style={artifact.aspectRatio ? `aspect-ratio: ${artifact.aspectRatio};` : undefined}
-                        />
+                        {artifact.kind === 'video' ? (
+                            <video
+                                aria-label={artifact.alt}
+                                controls
+                                preload="metadata"
+                                playsinline
+                                width={artifact.width}
+                                height={artifact.height}
+                            >
+                                <source src={artifact.src} type="video/mp4" />
+                                Your browser does not support video playback.
+                            </video>
+                        ) : (
+                            <img
+                                src={artifact.src}
+                                alt={artifact.alt}
+                                width={artifact.width}
+                                height={artifact.height}
+                                loading="lazy"
+                                decoding="async"
+                                style={artifact.aspectRatio ? `aspect-ratio: ${artifact.aspectRatio};` : undefined}
+                            />
+                        )}
                     </div>
                     <figcaption>
                         {artifact.caption}

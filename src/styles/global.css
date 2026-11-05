@@ -315,6 +315,26 @@ body {
     max-width: 75ch;
 }
 
+.case-study-video-hero {
+    width: min(calc(100vw - 3rem), 1100px);
+    margin-left: calc(50% - 50vw + 1.5rem);
+    margin-bottom: 1.5rem;
+}
+
+.case-study-video-hero video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    background: var(--gallery-bg);
+}
+
+.case-study-video-hero figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
 .case-study-section + .case-study-section {
     margin-top: 2.5rem;
 }
@@ -369,7 +389,8 @@ body {
     background: var(--gallery-bg);
 }
 
-.case-study-artifact img {
+.case-study-artifact img,
+.case-study-artifact video {
     display: block;
     width: 100%;
     height: auto;

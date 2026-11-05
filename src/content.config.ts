@@ -9,7 +9,8 @@ const caseStudyArtifactSchema = z.object({
     width: z.number().int().positive().optional(),
     height: z.number().int().positive().optional(),
     aspectRatio: z.string().optional(),
-    kind: z.enum(['screenshot', 'diagram', 'document', 'photo', 'other']).optional(),
+    kind: z.enum(['screenshot', 'diagram', 'document', 'photo', 'video', 'other']).optional(),
+    poster: z.string().url().optional(),
     layout: z.enum(['standard', 'featured']).optional(),
 });
 
